@@ -53,9 +53,9 @@ body {
 
 
 .bg {
-  background: linear-gradient(rgba(0, 0, 0, 0.3)), url("/bg.jpg") no-repeat;
+  background:  url("/bg.jpg") no-repeat;
   background-position: center top;
-  background-size: center;
+  background-size: cover;
 }
 
 
