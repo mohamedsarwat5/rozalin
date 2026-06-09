@@ -29,6 +29,7 @@ export default function Home() {
   }
   return (
     <div>
+      <div className="min-h-dvh w-full bg"></div>
       <div className="padding grid md:grid-cols-5 grid-cols-2 gap-4">
         {data?.map((product, i) => (
           <div key={i} className="mb-6 ">
