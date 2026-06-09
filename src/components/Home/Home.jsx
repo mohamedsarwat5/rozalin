@@ -45,7 +45,7 @@ export default function Home() {
                 <div className="flex items-center ">
                   <div className="flex items-center space-x-3 text-sm">
                     <h5 className="font-medium">{product.price} EGP</h5>
-                    <h5 className="line-through text-gray-500">750 EGP</h5>
+                    <h5 className="line-through hidden md:block text-gray-500">750 EGP</h5>
                   </div>
                   <div className="flex mt-1 items-center text-xs ml-auto">
                     <h6 className="">4.9</h6>
