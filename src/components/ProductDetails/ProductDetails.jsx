@@ -8,9 +8,11 @@ import Loading from "../Loading/Loading";
 export default function ProductDetails() {
   // اجعلها تحت دالة useQuery مباشرة
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
+  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedLength, setSelectedLength] = useState("");
   const { id } = useParams();
 
-  const scrollToToP = () => {
+  const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -78,7 +80,7 @@ export default function ProductDetails() {
                 key={index}
                 onClick={() => {
                   setSelectedColorIndex(index);
-                  //   scrollToToP();
+                  scrollToTop();
                 }} // عند الضغط، يتم تحديث المؤشر ليعرض الصورة الخاصة باللون
                 className={`capitalize py-1 px-4 rounded-md font-normal border cursor-pointer transition-all
       ${
@@ -92,14 +94,56 @@ export default function ProductDetails() {
             ))}
           </div>
 
-          <div className="mt-4">
-            <textarea
-              id="message"
-              rows="4"
-              placeholder="Write your height, weight, or size notes here..."
-              className="w-full p-3 md:p-4 text-sm md:text-base text-burgundy placeholder-gray-400 bg-transparent border border-burgundy rounded-md shadow-sm min-h-20  focus:outline-none focus:ring-2 focus:ring-burgundy/20 focus:border-burgundy transition-all duration-300 resize-y"
-            />
+          {/* Sizes */}
+          <div className="mt-5">
+            <h4 className="mb-3">Sizes:</h4>
+
+            {data.category === "Blouses" ? (
+              <button className="bg-burgundy text-white border-burgundy py-1 px-4 rounded-md border w-fit">
+                one size
+              </button>
+            ) : (
+              <div className="flex flex-wrap gap-3">
+                {data?.availableWeights?.map((size, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedSize(size)}
+                    className={` py-1 px-4 rounded-md border transition-all cursor-pointer
+          ${
+            selectedSize === size
+              ? "bg-burgundy text-white border-burgundy"
+              : "text-burgundy border-burgundy bg-transparent"
+          }`}
+                  >
+                    {size} {size !== "one size" && "kg"}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
+
+          {data?.category !== "Blouses" && (
+            <div className="mt-5">
+              <h4 className="mb-3">Skirt Length:</h4>
+
+              <div className="flex flex-wrap gap-3">
+                {data?.availableLengths?.map((length, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedLength(length)}
+                    className={` py-1 px-4 rounded-md border transition-all cursor-pointer
+          ${
+            selectedLength === length
+              ? "bg-burgundy text-white border-burgundy"
+              : "text-burgundy border-burgundy bg-transparent"
+          }`}
+                  >
+                    {length} cm
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* add to bag */}
           <button className=" btn">
