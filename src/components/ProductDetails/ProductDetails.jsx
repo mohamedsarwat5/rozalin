@@ -100,25 +100,52 @@ export default function ProductDetails() {
 
             {data.category === "Blouses" ? (
               <button className="bg-burgundy text-white border-burgundy py-1 px-4 rounded-md border w-fit">
-                one size
+                {data?.availableWeights[0]}
               </button>
-            ) : (
-              <div className="flex flex-wrap gap-3">
-                {data?.availableWeights?.map((size, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedSize(size)}
-                    className={` py-1 px-4 rounded-md border transition-all cursor-pointer
+            ) : data.category === "sets" ? (
+              <>
+                <h4 className="mb-3">Blouse size : </h4>
+                <button className="bg-burgundy text-white border-burgundy py-1 px-4 rounded-md border w-fit">
+                  one size
+                </button>
+
+                <h4 className="mt-3">Skirt size:</h4>
+                <div className="flex flex-wrap gap-3 mt-3">
+                  {data?.availableWeights?.map((size, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setSelectedSize(size)}
+                      className={` py-1 px-4 rounded-md border transition-all cursor-pointer
           ${
             selectedSize === size
               ? "bg-burgundy text-white border-burgundy"
               : "text-burgundy border-burgundy bg-transparent"
           }`}
-                  >
-                    {size} {size !== "one size" && "kg"}
-                  </button>
-                ))}
-              </div>
+                    >
+                      {size} {size !== "one size" && "kg"}
+                    </button>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+              <div className="flex flex-wrap gap-3 mt-3">
+                  {data?.availableWeights?.map((size, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setSelectedSize(size)}
+                      className={` py-1 px-4 rounded-md border transition-all cursor-pointer
+          ${
+            selectedSize === size
+              ? "bg-burgundy text-white border-burgundy"
+              : "text-burgundy border-burgundy bg-transparent"
+          }`}
+                    >
+                      {size} {size !== "one size" && "kg"}
+                    </button>
+                  ))}
+                </div>
+              </>
             )}
           </div>
 
