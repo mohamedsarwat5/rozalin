@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loading from "../Loading/Loading";
+import toast from "react-hot-toast";
 
 export default function Checkout() {
   const queryClient = useQueryClient();
@@ -44,7 +45,7 @@ export default function Checkout() {
       return data;
     },
     onSuccess: () => {
-      alert("🎉 Your order has been placed successfully!");
+      toast.success("Order placed successfully!");
       // تحديث كاش العربة في الـ TanStack Query لتظهر فارغة فوراً في الـ Navbar
       queryClient.invalidateQueries(["cart"]);
       // توجيه العميل لصفحة الرئيسة أو صفحة نجاح الطلب
@@ -52,10 +53,7 @@ export default function Checkout() {
     },
     onError: (error) => {
       console.error(error);
-      alert(
-        error.response?.data?.message ||
-          "Something went wrong while placing the order.",
-      );
+      toast.error(error.response?.data?.message || "Something went wrong.");
     },
   });
 
@@ -66,22 +64,49 @@ export default function Checkout() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // 1. تنظيف المدخلات من المسافات الزائدة في البداية والنهاية
+    const trimmedName = formData.customerName.trim();
+    const trimmedPhone = formData.phone.trim();
+    const trimmedAddress = formData.address.trim();
+
+    // 2. التحقق من أن العربة ليست فارغة
     if (!cartId || !cartData || cartData.items.length === 0) {
-      alert("Your cart is empty!");
+      toast.error("Your cart is empty!");
       return;
     }
 
-    // إعداد البيانات المطابقة للـ Router تماماً
+    // 3. الـ RegEx الخاص بأرقام الهواتف في مصر (010, 011, 012, 015) ومكون من 11 رقم
+    const egyptPhoneRegex = /^01[0125][0-9]{8}$/;
+
+    if (!egyptPhoneRegex.test(trimmedPhone)) {
+      toast.error("Enter a valid mobile number");
+      return; // إيقاف العملية
+    }
+
+    // 4. التحقق من أن الاسم يحتوي على اسم ثنائي أو ثلاثي على الأقل (يحتوي على مسافة بين الأسماء)
+    const nameWords = trimmedName.split(/\s+/); // تقسيم الاسم بناءً على المسافات
+    if (nameWords.length < 2 || trimmedName.length < 8) {
+      toast.error("Enter your full name.");
+      return; // إيقاف العملية
+    }
+
+    // 5. التحقق من جدية العنوان
+    if (trimmedAddress.length < 15) {
+      toast.error("Please provide a more detailed address for shipping.");
+      return;
+    }
+
+    // إذا مرت البيانات من كل الفحوصات بنجاح، يتم إرسال الطلب
     const orderPayload = {
       cartId,
-      customerName: formData.customerName,
-      phone: formData.phone,
-      address: formData.address,
+      customerName: trimmedName,
+      phone: trimmedPhone,
+      address: trimmedAddress,
     };
 
     createOrderMutation.mutate(orderPayload);
   };
-
   if (isLoading) return <Loading />;
 
   const cartItems = cartData?.items || [];
@@ -109,10 +134,12 @@ export default function Checkout() {
                   type="text"
                   name="customerName"
                   required
+                  minLength={8}
+                  maxLength={50}
                   value={formData.customerName}
                   onChange={handleInputChange}
                   className="w-full border p-2.5 rounded-md focus:ring-1 focus:ring-burgundy focus:outline-none"
-                  placeholder="Aya Ahmed"
+                  placeholder="Mohamed Elsayed"
                 />
               </div>
 
@@ -124,10 +151,15 @@ export default function Checkout() {
                   type="tel"
                   name="phone"
                   required
+                  maxLength={11} // يمنع المستخدم من كتابة أكثر من 11 رقم
                   value={formData.phone}
-                  onChange={handleInputChange}
+                  onChange={(e) => {
+                    // كود ذكي: يمنع المستخدم من كتابة أي حروف نهائياً ويقبل أرقام فقط
+                    const value = e.target.value.replace(/\D/g, "");
+                    setFormData((prev) => ({ ...prev, phone: value }));
+                  }}
                   className="w-full border p-2.5 rounded-md focus:ring-1 focus:ring-burgundy focus:outline-none"
-                  placeholder="01xxxxxxxxx"
+                  placeholder="01152718443"
                 />
               </div>
 
@@ -163,7 +195,6 @@ export default function Checkout() {
                   disabled={createOrderMutation.isPending}
                   className="btn"
                 >
-
                   {createOrderMutation.isPending
                     ? "Processing your order..."
                     : "Place Order (Cash on Delivery)"}
@@ -178,12 +209,18 @@ export default function Checkout() {
               Order Summary
             </h3>
 
-            <div className="divide-y max-h-96 overflow-y-auto pr-2 space-y-4">
-              {cartItems.map((item) => (
+            <div className="max-h-96 overflow-y-auto pr-2">
+              {cartItems.map((item, index) => (
                 <div
                   key={item._id}
-                  className="flex space-x-4 pt-4 first:pt-0 items-start"
+                  // إزالة divide-y و space-y واستخدام pb-4 للتوسيع، و border-b للخط الفاصل
+                  className={`flex space-x-4 py-4 items-start ${
+                    index !== cartItems.length - 1
+                      ? "border-b border-gray-200"
+                      : ""
+                  }`}
                 >
+                  {/* صورة المنتج */}
                   <div className="w-16 h-20 bg-white rounded overflow-hidden shrink-0 border">
                     <img
                       src={item.selectedColor?.image}
@@ -191,6 +228,8 @@ export default function Checkout() {
                       className="w-full h-full object-cover"
                     />
                   </div>
+
+                  {/* تفاصيل المنتج */}
                   <div className="flex-1 min-w-0">
                     <h4 className="font-medium text-sm text-gray-800 truncate capitalize">
                       {item.product?.name}

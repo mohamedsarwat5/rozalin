@@ -4,6 +4,7 @@ import { ShoppingBag } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Loading from "../Loading/Loading";
+import toast from "react-hot-toast";
 
 export default function ProductDetails() {
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
@@ -43,13 +44,13 @@ export default function ProductDetails() {
       return response.data;
     },
     onSuccess: () => {
-      alert("تم إضافة المنتج إلى العربة بنجاح! 🎉");
+      toast.success("Added Successfully");
       // تحديث بيانات العربة في الخلفية لتظهر المنتجات الجديدة فوراً في الـ Sidebar
       queryClient.invalidateQueries(["cart", cartId]);
     },
     onError: (error) => {
       console.error("Error adding to cart:", error);
-      alert("حدث خطأ أثناء إضافة المنتج، يرجى المحاولة لاحقاً.");
+      toast.error("Failed to add product.");
     },
   });
 
@@ -57,11 +58,11 @@ export default function ProductDetails() {
   const handleAddToCart = () => {
     // التحقق من اختيار المقاس إذا كان المنتج يحتوي على مقاسات كـ Sets أو غيره
     if (data?.category !== "Blouses" && !selectedSize) {
-      alert("من فضلك اختر المقاس أولاً!");
+      toast.error("Please choose size first");
       return;
     }
     if (data?.category !== "Blouses" && !selectedLength) {
-      alert("من فضلك اختر الطول أولاً!");
+      toast.error("Please choose length first");
       return;
     }
 
