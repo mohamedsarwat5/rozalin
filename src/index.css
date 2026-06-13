@@ -40,6 +40,8 @@ body {
   @apply bg-burgundy px-4 py-2 rounded-md w-full mt-7 flex text-text items-center justify-center space-x-3 border border-transparent
 }
 
+
+
 .btn:hover {
   cursor: pointer;
   background: transparent;

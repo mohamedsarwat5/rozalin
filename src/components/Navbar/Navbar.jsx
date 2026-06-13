@@ -24,6 +24,7 @@ export default function Navbar() {
 
   const baseUrl = import.meta.env.VITE_BASE_URL;
   const cartId = localStorage.getItem("cartId");
+
   const getCartItems = async () => {
     const { data } = await axios.get(`${baseUrl}cart/${cartId}`);
     console.log(data);
@@ -77,8 +78,9 @@ export default function Navbar() {
         </div>
 
         {/* زر فتح العربة */}
-        <button onClick={openSideCart} className="cursor-pointer">
+        <button onClick={openSideCart} className="cursor-pointer relative">
           <ShoppingCartIcon />
+          {/* <h6 className="bg-burgundy text-xs absolute  top-1  -right-1 rounded-full text-white w-1 h-1 flex items-center justify-center p-1"></h6> */}
         </button>
 
         {/* الـ Overlay: تم إزالة الشرط عنه ليعمل الـ transition-opacity عند الفتح والإغلاق بسلاسة */}
@@ -191,9 +193,9 @@ export default function Navbar() {
                   <span>Total Price:</span>
                   <span>{data?.totalPrice} EGP</span>
                 </div>
-                <button className="w-full bg-burgundy text-white py-2.5 rounded-md font-medium text-sm hover:bg-opacity-90 transition-all capitalize">
+                <NavLink to={"/checkout"} onClick={openSideCart} className="block text-center w-full bg-burgundy text-white py-2.5 rounded-md font-medium text-sm hover:bg-opacity-90 transition-all capitalize">
                   proceed to checkout
-                </button>
+                </NavLink>
               </div>
             )}
           </div>
