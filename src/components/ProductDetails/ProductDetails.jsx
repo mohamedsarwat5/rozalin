@@ -1,30 +1,85 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { ShoppingBag, Star } from "lucide-react";
-import React, { useState } from "react";
+import { ShoppingBag } from "lucide-react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Loading from "../Loading/Loading";
 
 export default function ProductDetails() {
-  // اجعلها تحت دالة useQuery مباشرة
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedLength, setSelectedLength] = useState("");
   const { id } = useParams();
+  const queryClient = useQueryClient();
+
+  // الحصول على الـ cartId أو إنشائه إذا لم يكن موجوداً
+  let cartId = localStorage.getItem("cartId");
+  if (!cartId) {
+    cartId = "cart_" + Math.random().toString(36).substr(2, 9); // توليد معرف عشوائي بسيط
+    localStorage.setItem("cartId", cartId);
+  }
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const baseUrl = import.meta.env.VITE_BASE_URL;
 
+  // 1. جلب تفاصيل المنتج
   const getProductDetails = async () => {
     const { data } = await axios.get(`${baseUrl}products/${id}`);
     return data;
   };
+
   const { data, isLoading } = useQuery({
-    queryKey: ["details"],
+    queryKey: ["details", id],
     queryFn: getProductDetails,
   });
+
+  // 2. دالة إضافة المنتج إلى العربة باستخدام useMutation و Axios
+  const addToCartMutation = useMutation({
+    mutationFn: async (cartData) => {
+      // بناءً على الراوتر: الـ endpoint هو نفس الـ base الخاص بالـ cart (مثال: ${baseUrl}cart)
+      const response = await axios.post(`${baseUrl}cart`, cartData);
+      return response.data;
+    },
+    onSuccess: () => {
+      alert("تم إضافة المنتج إلى العربة بنجاح! 🎉");
+      // تحديث بيانات العربة في الخلفية لتظهر المنتجات الجديدة فوراً في الـ Sidebar
+      queryClient.invalidateQueries(["cart", cartId]);
+    },
+    onError: (error) => {
+      console.error("Error adding to cart:", error);
+      alert("حدث خطأ أثناء إضافة المنتج، يرجى المحاولة لاحقاً.");
+    },
+  });
+
+  // 3. معالج الضغط على زر الإضافة
+  const handleAddToCart = () => {
+    // التحقق من اختيار المقاس إذا كان المنتج يحتوي على مقاسات كـ Sets أو غيره
+    if (data?.category !== "Blouses" && !selectedSize) {
+      alert("من فضلك اختر المقاس أولاً!");
+      return;
+    }
+    if (data?.category !== "Blouses" && !selectedLength) {
+      alert("من فضلك اختر الطول أولاً!");
+      return;
+    }
+
+    // تجهيز البيانات بالشكل المظبوط المتوقع في الـ Backend req.body
+    const productPayload = {
+      cartId: cartId, // تأكد أن الـ cartId المخزن في الـ localStorage عبارة عن ObjectId صالح إذا كان مطلوباً، أو قم بإيقاف required: true في السيرفر مؤقتاً للـ user.
+      productId: data?._id || id,
+      color: data?.colors?.[selectedColorIndex]?.color,
+      image: data?.colors?.[selectedColorIndex]?.image,
+      price: data?.price,
+      quantity: 1,
+      size: selectedSize || null, // إرسال المقاس المختار
+      length: selectedLength || null, // إرسال الطول المختار
+    };
+
+    // تنفيذ عملية الإرسال
+    addToCartMutation.mutate(productPayload);
+  };
 
   if (isLoading) {
     return <Loading />;
@@ -44,11 +99,9 @@ export default function ProductDetails() {
         {/* data */}
         <div>
           <div className="flex flex-col justify-between ">
-            {/* name */}
             <h2 className="text-burgundy font-bold md:text-2xl text-xl mb-3 capitalize">
               {data?.name}
             </h2>
-            {/* rates */}
             <div className="flex items-center">
               {Array.from({ length: 5 }).map((_, i) => (
                 <i key={i} className="fa-solid fa-star text-[#ECB018]"></i>
@@ -56,14 +109,12 @@ export default function ProductDetails() {
               <span className="ml-2 text-sm"> (4.9)</span>
             </div>
           </div>
-          {/* <h3>Category: {data.category}</h3> */}
 
           <p className="my-5">{data?.description}</p>
 
           {/* price */}
           <div className="flex items-center space-x-4 mb-5">
             <h3 className="font-bold text-burgundy text-2xl">
-              {" "}
               {data?.price}{" "}
               <span className="text-gray-500 text-lg font-normal">EGP</span>
             </h3>
@@ -72,6 +123,7 @@ export default function ProductDetails() {
               750 <span className="line-none">EGP</span>
             </h3>
           </div>
+
           {/* colors */}
           <h5 className="mb-3">Colors:</h5>
           <div className="flex items-center space-x-3">
@@ -81,13 +133,12 @@ export default function ProductDetails() {
                 onClick={() => {
                   setSelectedColorIndex(index);
                   scrollToTop();
-                }} // عند الضغط، يتم تحديث المؤشر ليعرض الصورة الخاصة باللون
-                className={`capitalize py-1 px-4 rounded-md font-normal border cursor-pointer transition-all
-      ${
-        selectedColorIndex === index
-          ? "bg-burgundy text-white border-burgundy" // شكل اللون المحدد نشطاً
-          : "text-burgundy border-burgundy bg-transparent" // شكل باقي الألوان الغير محددة
-      }`}
+                }}
+                className={`capitalize py-1 px-4 rounded-md font-normal border cursor-pointer transition-all ${
+                  selectedColorIndex === index
+                    ? "bg-burgundy text-white border-burgundy"
+                    : "text-burgundy border-burgundy bg-transparent"
+                }`}
               >
                 {c.color}
               </h4>
@@ -100,7 +151,7 @@ export default function ProductDetails() {
 
             {data.category === "Blouses" ? (
               <button className="bg-burgundy text-white border-burgundy py-1 px-4 rounded-md border w-fit">
-                {data?.availableWeights[0]}
+                {data?.availableWeights}
               </button>
             ) : data.category === "sets" ? (
               <>
@@ -115,12 +166,11 @@ export default function ProductDetails() {
                     <button
                       key={index}
                       onClick={() => setSelectedSize(size)}
-                      className={` py-1 px-4 rounded-md border transition-all cursor-pointer
-          ${
-            selectedSize === size
-              ? "bg-burgundy text-white border-burgundy"
-              : "text-burgundy border-burgundy bg-transparent"
-          }`}
+                      className={` py-1 px-4 rounded-md border transition-all cursor-pointer ${
+                        selectedSize === size
+                          ? "bg-burgundy text-white border-burgundy"
+                          : "text-burgundy border-burgundy bg-transparent"
+                      }`}
                     >
                       {size} {size !== "one size" && "kg"}
                     </button>
@@ -129,17 +179,16 @@ export default function ProductDetails() {
               </>
             ) : (
               <>
-              <div className="flex flex-wrap gap-3 mt-3">
+                <div className="flex flex-wrap gap-3 mt-3">
                   {data?.availableWeights?.map((size, index) => (
                     <button
                       key={index}
                       onClick={() => setSelectedSize(size)}
-                      className={` py-1 px-4 rounded-md border transition-all cursor-pointer
-          ${
-            selectedSize === size
-              ? "bg-burgundy text-white border-burgundy"
-              : "text-burgundy border-burgundy bg-transparent"
-          }`}
+                      className={` py-1 px-4 rounded-md border transition-all cursor-pointer ${
+                        selectedSize === size
+                          ? "bg-burgundy text-white border-burgundy"
+                          : "text-burgundy border-burgundy bg-transparent"
+                      }`}
                     >
                       {size} {size !== "one size" && "kg"}
                     </button>
@@ -152,18 +201,16 @@ export default function ProductDetails() {
           {data?.category !== "Blouses" && (
             <div className="mt-5">
               <h4 className="mb-3">Skirt Length:</h4>
-
               <div className="flex flex-wrap gap-3">
                 {data?.availableLengths?.map((length, index) => (
                   <button
                     key={index}
                     onClick={() => setSelectedLength(length)}
-                    className={` py-1 px-4 rounded-md border transition-all cursor-pointer
-          ${
-            selectedLength === length
-              ? "bg-burgundy text-white border-burgundy"
-              : "text-burgundy border-burgundy bg-transparent"
-          }`}
+                    className={` py-1 px-4 rounded-md border transition-all cursor-pointer ${
+                      selectedLength === length
+                        ? "bg-burgundy text-white border-burgundy"
+                        : "text-burgundy border-burgundy bg-transparent"
+                    }`}
                   >
                     {length} cm
                   </button>
@@ -172,10 +219,18 @@ export default function ProductDetails() {
             </div>
           )}
 
-          {/* add to bag */}
-          <button className=" btn">
-            <ShoppingBag className="" size={18} />
-            <h6 className="capitalize  font-medium">add to bag</h6>
+          {/* add to bag button */}
+          <button
+            onClick={handleAddToCart}
+            disabled={addToCartMutation.isPending} // تعطيل الزر أثناء الإرسال لمنع التكرار
+            className={`btn mt-8 flex items-center justify-center space-x-2 w-full md:w-auto ${
+              addToCartMutation.isPending ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+          >
+            <ShoppingBag size={18} />
+            <h6 className="capitalize font-medium">
+              {addToCartMutation.isPending ? "Adding..." : "add to bag"}
+            </h6>
           </button>
         </div>
       </div>
