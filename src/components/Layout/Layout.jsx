@@ -16,7 +16,6 @@ export default function Layout() {
   return (
     <div>
       <AnimatePresence mode="wait">
-        <Navbar />
         <motion.div
           key={pathname}
           initial={{ opacity: 0, y: 15 }}
@@ -24,6 +23,7 @@ export default function Layout() {
           exit={{ opacity: 0, y: -15 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
         >
+          <Navbar />
           <Outlet key={pathname} />
         </motion.div>
       </AnimatePresence>
