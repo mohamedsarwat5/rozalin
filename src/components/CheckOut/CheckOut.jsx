@@ -139,7 +139,7 @@ export default function Checkout() {
                   value={formData.customerName}
                   onChange={handleInputChange}
                   className="w-full border p-2.5 rounded-md focus:ring-1 focus:ring-burgundy focus:outline-none"
-                  placeholder="Mohamed Elsayed"
+                  placeholder="Aya Ahmed"
                 />
               </div>
 
@@ -159,7 +159,7 @@ export default function Checkout() {
                     setFormData((prev) => ({ ...prev, phone: value }));
                   }}
                   className="w-full border p-2.5 rounded-md focus:ring-1 focus:ring-burgundy focus:outline-none"
-                  placeholder="01152718443"
+                  placeholder="01023456789"
                 />
               </div>
 

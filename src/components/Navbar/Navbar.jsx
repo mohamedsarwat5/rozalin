@@ -39,7 +39,7 @@ export default function Navbar() {
   const cartItems = data?.items || [];
   return (
     // bg-[#ffe7de]
-    <div className=" bg-white shadow-md border-b-burgundy sticky top-0 left-0 right-0">
+    <div className=" bg-white shadow-md border-b-burgundy sticky top-0 left-0 right-0 z-20">
       <nav className="md:px-30 p-4 flex items-center  justify-between">
         <button onClick={openSideMenu} className="cursor-pointer">
           <Menu />

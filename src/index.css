@@ -50,7 +50,7 @@ body {
 }
 
 .padding {
-  @apply p-6 md:py-12 md:px-30
+  @apply p-4 md:py-12 md:px-30
 }
 
 

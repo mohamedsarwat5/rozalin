@@ -3,7 +3,9 @@ import pink from "/pink.webp";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import Loading from "../Loading/Loading";
+
 export default function Home() {
   useEffect(() => {
     let cartId = localStorage.getItem("cartId");
@@ -32,10 +34,17 @@ export default function Home() {
       <div className="h-105 md:min-h-dvh    w-full bg"></div>
       <div className="padding grid md:grid-cols-5 grid-cols-2 gap-4">
         {data?.map((product, i) => (
-          <div key={i} className="mb-6 ">
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, scale: 0.5 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.5 }}
+            className="mb-6 "
+          >
             <NavLink to={`/details/${product._id}`}>
-              <div className=" overflow-hidden mb-4 rounded-lg">
-                <img src={product.colors[0].image} alt="" className="image"/>
+              <div className=" overflow-hidden mb-4 rounded-md">
+                <img src={product.colors[0].image} alt="" className="image" />
               </div>
               <div className="text-sm">
                 <h3 className="capitalize font-semibold text-burgundy truncate ">
@@ -46,7 +55,9 @@ export default function Home() {
                 <div className="flex items-center ">
                   <div className="flex items-center space-x-3 text-sm">
                     <h5 className="font-medium">{product.price} EGP</h5>
-                    <h5 className="line-through hidden md:block text-gray-500">750 EGP</h5>
+                    <h5 className="line-through hidden md:block text-gray-500">
+                      750 EGP
+                    </h5>
                   </div>
                   <div className="flex mt-1 items-center text-xs ml-auto">
                     <h6 className="">4.9</h6>
@@ -55,7 +66,7 @@ export default function Home() {
                 </div>
               </div>
             </NavLink>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>
