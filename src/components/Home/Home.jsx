@@ -36,10 +36,10 @@ export default function Home() {
         {data?.map((product, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, scale: 0.5 }}
+            initial={{ opacity: 0, scale: 0.7 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.35 }}
             className="mb-6 "
           >
             <NavLink to={`/details/${product._id}`}>
