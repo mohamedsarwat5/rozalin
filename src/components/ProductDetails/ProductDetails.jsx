@@ -127,7 +127,7 @@ export default function ProductDetails() {
 
           {/* colors */}
           <h5 className="mb-3">Colors:</h5>
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center flex-wrap  gap-3">
             {data?.colors.map((c, index) => (
               <h4
                 key={index}
