@@ -1,22 +1,25 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { ShoppingBag } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import Loading from "../Loading/Loading";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
+import { Store } from "../../context/StoreProvider";
 
 export default function ProductDetails() {
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedLength, setSelectedLength] = useState("");
+  const [quantity, setQuantity] = useState(1);
   const { id } = useParams();
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient(); // تم الإبقاء على تعريف واحد فقط هنا
+  const { setOpennCart } = useContext(Store);
 
   // الحصول على الـ cartId أو إنشائه إذا لم يكن موجوداً
   let cartId = localStorage.getItem("cartId");
   if (!cartId) {
-    cartId = "cart_" + Math.random().toString(36).substr(2, 9); // توليد معرف عشوائي بسيط
+    cartId = "cart_" + Math.random().toString(36).substr(2, 9);
     localStorage.setItem("cartId", cartId);
   }
 
@@ -36,16 +39,15 @@ export default function ProductDetails() {
     queryFn: getProductDetails,
   });
 
-  // 2. دالة إضافة المنتج إلى العربة باستخدام useMutation و Axios
+  // 2. دالة إضافة المنتج إلى العربة
   const addToCartMutation = useMutation({
     mutationFn: async (cartData) => {
-      // بناءً على الراوتر: الـ endpoint هو نفس الـ base الخاص بالـ cart (مثال: ${baseUrl}cart)
       const response = await axios.post(`${baseUrl}cart`, cartData);
       return response.data;
     },
     onSuccess: () => {
-      toast.success("Added Successfully");
-      // تحديث بيانات العربة في الخلفية لتظهر المنتجات الجديدة فوراً في الـ Sidebar
+      setOpennCart(true);
+      setQuantity(1); // إعادة العداد إلى 1 بعد الإضافة الناجحة
       queryClient.invalidateQueries(["cart", cartId]);
     },
     onError: (error) => {
@@ -54,9 +56,25 @@ export default function ProductDetails() {
     },
   });
 
+  // دالة Mutation لتحديث الكمية (إذا كنت تستخدمها داخل هذه الصفحة)
+  const updateQuantityMutation = useMutation({
+    mutationFn: async ({ itemId, newQuantity }) => {
+      const response = await axios.put(`${baseUrl}cart/${cartId}/${itemId}`, {
+        quantity: newQuantity,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["cart", cartId]);
+    },
+    onError: (error) => {
+      console.error("Error updating quantity:", error);
+      toast.error("فشل تحديث الكمية");
+    },
+  });
+
   // 3. معالج الضغط على زر الإضافة
   const handleAddToCart = () => {
-    // التحقق من اختيار المقاس إذا كان المنتج يحتوي على مقاسات كـ Sets أو غيره
     if (data?.category !== "Blouses" && !selectedSize) {
       toast.error("Please choose size first");
       return;
@@ -66,19 +84,17 @@ export default function ProductDetails() {
       return;
     }
 
-    // تجهيز البيانات بالشكل المظبوط المتوقع في الـ Backend req.body
     const productPayload = {
-      cartId: cartId, // تأكد أن الـ cartId المخزن في الـ localStorage عبارة عن ObjectId صالح إذا كان مطلوباً، أو قم بإيقاف required: true في السيرفر مؤقتاً للـ user.
+      cartId: cartId,
       productId: data?._id || id,
       color: data?.colors?.[selectedColorIndex]?.color,
       image: data?.colors?.[selectedColorIndex]?.image,
       price: data?.price,
-      quantity: 1,
-      size: selectedSize || null, // إرسال المقاس المختار
-      length: selectedLength || null, // إرسال الطول المختار
+      quantity: quantity,
+      size: selectedSize || null,
+      length: selectedLength || null,
     };
 
-    // تنفيذ عملية الإرسال
     addToCartMutation.mutate(productPayload);
   };
 
@@ -89,7 +105,7 @@ export default function ProductDetails() {
   return (
     <div className="padding ">
       <div className="grid md:grid-cols-2 grid-cols-1 gap-y-6 pb-12">
-        <div className="w-full md:w-8/12  overflow-hidden mx-auto">
+        <div className="w-full md:w-8/12 overflow-hidden mx-auto">
           <img
             src={data?.colors?.[selectedColorIndex]?.image}
             alt={data?.name}
@@ -127,7 +143,7 @@ export default function ProductDetails() {
 
           {/* colors */}
           <h5 className="mb-3">Colors:</h5>
-          <div className="flex items-center flex-wrap  gap-3">
+          <div className="flex items-center flex-wrap gap-3">
             {data?.colors.map((c, index) => (
               <h4
                 key={index}
@@ -220,10 +236,60 @@ export default function ProductDetails() {
             </div>
           )}
 
-          {/* add to bag button */}
+          {/* الحاوية الخاصة بالكمية */}
+          <form className="mt-4">
+            <label className="block mb-3 text-sm font-medium text-heading">
+              Choose quantity:
+            </label>
+            <div className="relative flex items-center">
+
+              {/* زر النقصان (-) تم إصلاحه هنا لتنقيص الكمية وحمايتها */}
+              <button
+                onClick={() => setQuantity((prev) => (prev > 1 ? prev - 1 : 1))}
+                type="button"
+                className="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading rounded-full text-sm focus:outline-none h-6 w-6"
+              >
+                <svg
+                  className="w-3 h-3 text-heading"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14" />
+                </svg>
+              </button>
+
+              <input
+                type="text"
+                id="counter-input"
+                className="shrink-0 text-heading border-0 bg-transparent text-sm font-normal focus:outline-none focus:ring-0 max-w-10 text-center"
+                value={quantity}
+                readOnly
+                required
+              />
+
+              {/* زر الزيادة (+) تم إصلاحه هنا لزيادة الكمية */}
+              <button
+                onClick={() => setQuantity((prev) => prev + 1)}
+                type="button"
+                className="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading rounded-full text-sm focus:outline-none h-6 w-6"
+              >
+                <svg
+                  className="w-3 h-3 text-heading"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14m-7 7V5" />
+                </svg>
+              </button>
+            </div>
+          </form>
+
+          {/* زر add to bag */}
           <button
             onClick={handleAddToCart}
-            disabled={addToCartMutation.isPending} // تعطيل الزر أثناء الإرسال لمنع التكرار
+            disabled={addToCartMutation.isPending}
             className={`btn mt-8 flex items-center justify-center space-x-2 w-full md:w-auto ${
               addToCartMutation.isPending ? "opacity-50 cursor-not-allowed" : ""
             }`}

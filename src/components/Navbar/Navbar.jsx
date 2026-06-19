@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import {
   Menu,
@@ -6,14 +6,19 @@ import {
   ShoppingBagIcon,
   ShoppingBasket,
   ShoppingCartIcon,
+  Trash,
   X,
 } from "lucide-react";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { Store } from "../../context/StoreProvider";
+import { toast } from "sonner";
 
 export default function Navbar() {
+  const { openCart, setOpennCart } = useContext(Store);
   const [openMenu, setOpenMenu] = useState(false);
-  const [openCart, setOpennCart] = useState(false);
+
+  const queryClient = useQueryClient();
 
   const openSideMenu = () => {
     setOpenMenu((prev) => !prev);
@@ -27,9 +32,27 @@ export default function Navbar() {
 
   const getCartItems = async () => {
     const { data } = await axios.get(`${baseUrl}cart/${cartId}`);
-    console.log(data);
     return data;
   };
+
+  const deleteItemMutation = useMutation({
+    mutationFn: async (itemId) => {
+      // إرسال طلب الحذف للسيرفر
+      const response = await axios.delete(`${baseUrl}cart/${cartId}/${itemId}`);
+      return response.data;
+    },
+    onSuccess: () => {
+      toast.success("Deleted Successfully");
+
+      // 🔥 السحر هنا: إجبار الـ Query المسؤول عن جلب العربة على تحديث بياناته فوراً
+      // تأكد من أن الكي ["cart", cartId] يطابق تماماً الـ queryKey المستخدم في جلب بيانات العربة
+      queryClient.invalidateQueries(["cart", cartId]);
+    },
+    onError: (error) => {
+      console.error("حطأ أثناء الحذف:", error);
+      toast.error("فشل حذف المنتج");
+    },
+  });
 
   const { data } = useQuery({
     queryKey: ["cart"],
@@ -37,12 +60,19 @@ export default function Navbar() {
   });
 
   const cartItems = data?.items || [];
+
   return (
     // bg-[#ffe7de]
     <div className=" bg-white shadow-md border-b-burgundy sticky top-0 left-0 right-0 z-20">
       <nav className="md:px-30 p-4 flex items-center  justify-between">
-        <button onClick={openSideMenu} className="cursor-pointer">
-          <Menu />
+        <button
+          onClick={openSideMenu}
+          className="cursor-pointer space-y-1 flex flex-col"
+        >
+          {/* <Menu /> */}
+          {Array.from({ length: 3 }).map((_, i) => (
+            <span className="h-[1px] bg-black w-5 block" key={i}></span>
+          ))}
         </button>
 
         <div
@@ -78,11 +108,23 @@ export default function Navbar() {
         </div>
 
         {/* زر فتح العربة */}
-        <button onClick={openSideCart} className="cursor-pointer relative">
-          <ShoppingCartIcon />
-          {/* <h6 className="bg-burgundy text-xs absolute  top-1  -right-1 rounded-full text-white w-1 h-1 flex items-center justify-center p-1"></h6> */}
+        <button
+          onClick={openSideCart}
+          className="cursor-pointer relative text-black"
+        >
+          <span className="block">
+            <svg
+              className="Icon Icon--cart w-5 h-5 text-black hover:text-burgundy transition-colors"
+              role="presentation"
+              viewBox="0 0 17 20"
+            >
+              <path
+                d="M0 20V4.995l1 .006v.015l4-.002V4c0-2.484 1.274-4 3.5-4C10.518 0 12 1.48 12 4v1.012l5-.003v.985H1V19h15V6.005h1V20H0zM11 4.49C11 2.267 10.507 1 8.5 1 6.5 1 6 2.27 6 4.49V5l5-.002V4.49z"
+                fill="#000"
+              ></path>
+            </svg>
+          </span>
         </button>
-
         {/* الـ Overlay: تم إزالة الشرط عنه ليعمل الـ transition-opacity عند الفتح والإغلاق بسلاسة */}
         <div
           className={`fixed inset-0 bg-black/35 z-10 transition-opacity duration-500 ease-in-out ${
@@ -119,7 +161,7 @@ export default function Navbar() {
                 cartItems.map((item) => (
                   <div key={item._id} className="flex space-x-4 border-b pb-4">
                     {/* صورة المنتج بناءً على اللون المختار */}
-                    <div className="w-20 h-24 flex-shrink-0 overflow-hidden rounded-md bg-gray-100">
+                    <div className="w-20 h-24 shrink-0 overflow-hidden rounded-md bg-gray-100">
                       <img
                         src={item.selectedColor?.image}
                         alt={item.product?.name}
@@ -130,8 +172,13 @@ export default function Navbar() {
                     {/* تفاصيل المنتج */}
                     <div className="flex flex-1 flex-col justify-between">
                       <div>
-                        <h4 className="font-semibold text-sm text-burgundy line-clamp-1 capitalize">
+                        <h4 className="font-semibold text-sm text-burgundy line-clamp-1 capitalize flex justify-between   items-center">
                           {item.product?.name}
+                          <button
+                            onClick={() => deleteItemMutation.mutate(item._id)}
+                          >
+                            <Trash />
+                          </button>
                         </h4>
 
                         {/* الخصائص المختارة */}
@@ -193,7 +240,11 @@ export default function Navbar() {
                   <span>Total Price:</span>
                   <span>{data?.totalPrice} EGP</span>
                 </div>
-                <NavLink to={"/checkout"} onClick={openSideCart} className="block text-center w-full bg-burgundy text-white py-2.5 rounded-md font-medium text-sm hover:bg-opacity-90 transition-all capitalize">
+                <NavLink
+                  to={"/checkout"}
+                  onClick={openSideCart}
+                  className="block text-center w-full bg-burgundy text-white py-2.5 rounded-md font-medium text-sm hover:bg-opacity-90 transition-all capitalize"
+                >
                   proceed to checkout
                 </NavLink>
               </div>
