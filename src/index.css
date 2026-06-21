@@ -1,4 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Encode+Sans+Expanded:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+@font-face {
+  font-family: "cocogoose-pro" ;
+  src:
+    url("./cocogoose-pro.thin.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+.logo{
+  font-family: "cocogoose-pro"
+}
 @import "tailwindcss";
 
 :root {
@@ -14,6 +25,7 @@
   --color-bg: var(--bg);
   --color-text: var(--text);
   --color-desc: var(--desc);
+  --font-spayre: "Sapyre", sans-serif;
 }
 
 body {
@@ -55,7 +67,7 @@ body {
 
 
 .bg {
-  background:  url("/bg.jpg") no-repeat;
+  background: url("/bg.jpg") no-repeat;
   background-position: center top;
   background-size: cover;
 }

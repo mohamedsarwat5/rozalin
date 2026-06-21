@@ -63,11 +63,12 @@ export default function Navbar() {
 
   return (
     // bg-[#ffe7de]
-    <div className=" bg-white shadow-md border-b-burgundy sticky top-0 left-0 right-0 z-20">
+    <div className=" bg-white  border-b-burgundy sticky top-0 left-0 right-0 z-20">
       <nav className="md:px-30 p-4 flex items-center  justify-between">
+        {/* menu button */}
         <button
           onClick={openSideMenu}
-          className="cursor-pointer space-y-1 flex flex-col"
+          className="cursor-pointer space-y-1.5 flex flex-col "
         >
           {/* <Menu /> */}
           {Array.from({ length: 3 }).map((_, i) => (
@@ -75,6 +76,7 @@ export default function Navbar() {
           ))}
         </button>
 
+        {/* overlay */}
         <div
           className={`fixed inset-0 bg-black/35 z-10 transition-opacity duration-500 ease-in-out ${
             openMenu
@@ -84,12 +86,13 @@ export default function Navbar() {
           onClick={() => setOpenMenu(false)}
         />
 
+        {/* x button */}
         <div
           className={`fixed z-50 bg-white top-0 bottom-0 left-0 w-4/5 md:w-3/12 transition-transform duration-500 ease-in-out ${
             openMenu ? "translate-x-0" : "-translate-x-full"
           }`}
         >
-          {/* زر الإغلاق */}
+          {/* exit button */}
           <button
             onClick={() => setOpenMenu(false)}
             className="absolute top-6 left-6 cursor-pointer hover:scale-110 transition-transform" // أضفت تأثير تفاعلي بسيط
@@ -98,10 +101,10 @@ export default function Navbar() {
             <X />
           </button>
         </div>
-
+        {/* logo */}
         <div className="w-fit">
           <NavLink to={"/"}>
-            <h1 className="text-2xl font-light tracking-wider text-burgundy">
+            <h1 className="text-2xl  tracking-wider text-burgundy  uppercase logo">
               Rozalin
             </h1>
           </NavLink>
@@ -150,7 +153,7 @@ export default function Navbar() {
           <div className="flex flex-col h-full bg-white">
             {/* العنوان */}
             <div className="p-4 border-b">
-              <h3 className="font-bold text-lg text-burgundy capitalize">
+              <h3 className="font-medium text-lg text-burgundy capitalize">
                 shopping bag ({cartItems.length})
               </h3>
             </div>
@@ -174,43 +177,52 @@ export default function Navbar() {
                       <div>
                         <h4 className="font-semibold text-sm text-burgundy line-clamp-1 capitalize flex justify-between   items-center">
                           {item.product?.name}
-                          <button
+                          {/* <button
                             onClick={() => deleteItemMutation.mutate(item._id)}
                           >
                             <Trash />
-                          </button>
+                          </button> */}
                         </h4>
 
                         {/* الخصائص المختارة */}
-                        <div className="mt-1 flex flex-wrap gap-x-2 gap-y-0.5 text-xs text-gray-500">
-                          <span>
-                            Color:{" "}
-                            <strong className="text-gray-700 capitalize">
-                              {item.selectedColor?.color}
-                            </strong>
-                          </span>
-                          {item.selectedWeight && (
-                            <>
-                              <span>|</span>
-                              <span>
-                                Size:{" "}
-                                <strong className="text-gray-700">
-                                  {item.selectedWeight} kg
-                                </strong>
-                              </span>
-                            </>
-                          )}
-                          {item.selectedLength && (
-                            <>
-                              <span>|</span>
-                              <span>
-                                Length:{" "}
-                                <strong className="text-gray-700">
-                                  {item.selectedLength} cm
-                                </strong>
-                              </span>
-                            </>
-                          )}
+                        <div className="flex justify-bettween items-center w-full">
+                          <div className="mt-1 flex flex-col flex-wrap gap-x-2 gap-y-0.5 text-xs text-gray-500">
+                            <span>
+                              Color:{" "}
+                              <strong className="text-gray-700 capitalize">
+                                {item.selectedColor?.color}
+                              </strong>
+                            </span>
+                            {item.selectedWeight && (
+                              <>
+                                {/* <span>|</span> */}
+                                <span>
+                                  Size:{" "}
+                                  <strong className="text-gray-700">
+                                    {item.selectedWeight} kg
+                                  </strong>
+                                </span>
+                              </>
+                            )}
+                            {item.selectedLength && (
+                              <>
+                                {/* <span>|</span> */}
+                                <span>
+                                  Length:{" "}
+                                  <strong className="text-gray-700">
+                                    {item.selectedLength} cm
+                                  </strong>
+                                </span>
+                              </>
+                            )}
+                          </div>
+                          {/* remove button from cart */}
+                          <button
+                            onClick={() => deleteItemMutation.mutate(item._id)}
+                            className="text-burgundy mb-8 ml-auto"
+                          >
+                            <Trash />
+                          </button>
                         </div>
                       </div>
 
