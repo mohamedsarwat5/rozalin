@@ -104,7 +104,7 @@ export default function Navbar() {
         {/* logo */}
         <div className="w-fit">
           <NavLink to={"/"}>
-            <h1 className="text-2xl  tracking-wider text-burgundy  uppercase logo">
+            <h1 className="text-2xl font-thin  tracking-wider text-burgundy  uppercase logo">
               Rozalin
             </h1>
           </NavLink>
