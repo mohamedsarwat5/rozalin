@@ -43,6 +43,10 @@ body {
 
 }
 
+.active{
+  @apply text-burgundy font-medium
+}
+
 .image:hover {
   transform: scale(1.2);
 }

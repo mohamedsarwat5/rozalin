@@ -2,6 +2,8 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import {
   Menu,
+  Minus,
+  Plus,
   ShoppingBag,
   ShoppingBagIcon,
   ShoppingBasket,
@@ -17,6 +19,10 @@ import { toast } from "sonner";
 export default function Navbar() {
   const { openCart, setOpennCart } = useContext(Store);
   const [openMenu, setOpenMenu] = useState(false);
+  const [isCollectionsOpen, setIsCollectionsOpen] = useState(false);
+
+  // مصفوفة تحتوي على العناصر الفرعية لـ All collections
+  const subCollections = ["Dresses", "Sets", "Blouses", "Skirts", "Abaya"];
 
   const queryClient = useQueryClient();
 
@@ -68,12 +74,19 @@ export default function Navbar() {
         {/* menu button */}
         <button
           onClick={openSideMenu}
-          className="cursor-pointer space-y-1.5 flex flex-col "
+          className="cursor-pointer flex items-center justify-center p-1"
         >
-          {/* <Menu /> */}
-          {Array.from({ length: 3 }).map((_, i) => (
-            <span className="h-[1px] bg-black w-5 block" key={i}></span>
-          ))}
+          <svg
+            width="18"
+            height="12"
+            viewBox="0 0 18 12"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M0 1H18" stroke="black" strokeWidth="1" />
+            <path d="M0 6H18" stroke="black" strokeWidth="1" />
+            <path d="M0 11H18" stroke="black" strokeWidth="1" />
+          </svg>
         </button>
 
         {/* overlay */}
@@ -85,8 +98,7 @@ export default function Navbar() {
           }`}
           onClick={() => setOpenMenu(false)}
         />
-
-        {/* x button */}
+        {/* side menu */}
         <div
           className={`fixed z-50 bg-white top-0 bottom-0 left-0 w-4/5 md:w-3/12 transition-transform duration-500 ease-in-out ${
             openMenu ? "translate-x-0" : "-translate-x-full"
@@ -95,11 +107,85 @@ export default function Navbar() {
           {/* exit button */}
           <button
             onClick={() => setOpenMenu(false)}
-            className="absolute top-6 left-6 cursor-pointer hover:scale-110 transition-transform" // أضفت تأثير تفاعلي بسيط
-            aria-label="Close menu" // تحسين الوصولية (Accessibility)
+            className="absolute top-6 left-6 cursor-pointer hover:scale-110 transition-transform flex items-center justify-center p-1"
+            aria-label="Close menu"
           >
-            <X />
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M2 2L14 14M14 2L2 14"
+                stroke="black"
+                strokeWidth="1"
+                strokeLinecap="round"
+              />
+            </svg>
           </button>
+
+          {/* side menu links */}
+          <nav className="space-y-5 font-light tracking-wide text-[15px] p-8 mt-16 ">
+            {/* Home */}
+            <div className="border-b border-slate-300 pb-4 acitve">
+              <NavLink to={"/"} className="hover:text-burgundy block">
+                Home
+              </NavLink>
+            </div>
+
+            {/* New Arrival */}
+            <div className="border-b border-slate-300 pb-4 acitve">
+              <NavLink
+                to={"/new"}
+                className="hover:text-burgundy font-normal block"
+              >
+                New Arrival
+              </NavLink>
+            </div>
+
+            {/* Best Seller */}
+            <div className="border-b border-slate-300 pb-4 acitve">
+              <NavLink to={"/bestSeller"} className="hover:text-burgundy block">
+                Best Seller
+              </NavLink>
+            </div>
+
+            {/* All collections (Accordion) */}
+            <div className="border-b border-slate-300 pb-4">
+              <button
+                onClick={() => setIsCollectionsOpen(!isCollectionsOpen)}
+                className="w-full flex items-center justify-between text-left cursor-pointer focus:outline-none"
+              >
+                <span>All collections</span>
+                {isCollectionsOpen ? (
+                  <Minus size={16} className="text-gray-500" />
+                ) : (
+                  <Plus size={16} className="text-gray-500" />
+                )}
+              </button>
+
+              {/* العناصر الفرعية لـ All collections */}
+              <div
+                className={`pl-4 space-y-4 pt-4 text-gray-600 text-[14px] transition-all duration-300 ease-in-out  ${
+                  isCollectionsOpen
+                    ? "max-h-125 opacity-100 "
+                    : "max-h-0 opacity-0 "
+                }`}
+              >
+                {subCollections.map((item, index) => (
+                  <a
+                    href="#"
+                    key={index}
+                    className="block hover:text-burgundy transition-colors"
+                  >
+                    {item}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </nav>
         </div>
         {/* logo */}
         <div className="w-fit">
@@ -145,9 +231,23 @@ export default function Navbar() {
           {/* زر الإغلاق */}
           <button
             onClick={openSideCart}
-            className="absolute top-6 right-6 cursor-pointer hover:scale-110 transition-transform"
+            className="absolute top-6 right-6 cursor-pointer hover:scale-110 transition-transform flex items-center justify-center p-1"
+            aria-label="Close cart"
           >
-            <X />
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M2 2L14 14M14 2L2 14"
+                stroke="black"
+                strokeWidth="1"
+                strokeLinecap="round"
+              />
+            </svg>
           </button>
 
           <div className="flex flex-col h-full bg-white">
