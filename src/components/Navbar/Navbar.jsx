@@ -17,8 +17,8 @@ import { Store } from "../../context/StoreProvider";
 import { toast } from "sonner";
 
 export default function Navbar() {
-  const { openCart, setOpennCart } = useContext(Store);
-  const [openMenu, setOpenMenu] = useState(false);
+  const { openCart, setOpennCart, openMenu, setOpenMenu } = useContext(Store);
+
   const [isCollectionsOpen, setIsCollectionsOpen] = useState(false);
 
   // مصفوفة تحتوي على العناصر الفرعية لـ All collections
@@ -100,7 +100,7 @@ export default function Navbar() {
         />
         {/* side menu */}
         <div
-          className={`fixed z-50 bg-white top-0 bottom-0 left-0 w-4/5 md:w-3/12 transition-transform duration-500 ease-in-out ${
+          className={`fixed z-50 bg-white h-250 overflow-y-auto top-0 bottom-0 left-0 w-4/5 md:w-3/12 transition-transform duration-500 ease-in-out ${
             openMenu ? "translate-x-0" : "-translate-x-full"
           }`}
         >

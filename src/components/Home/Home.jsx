@@ -49,7 +49,7 @@ export default function Home() {
             </span>
             )}
             <NavLink to={`/details/${product._id}`}>
-              <div className=" overflow-hidden mb-4 rounded-md aspect-3/4 ">
+              <div className=" overflow-hidden mb-4 rounded-md aspect-2/3 ">
                 <img
                   src={product.colors[0].image}
                   alt=""
@@ -64,7 +64,7 @@ export default function Home() {
 
                 <div className="flex items-center ">
                   <div className="flex items-center space-x-3 text-sm">
-                    <h5 className="font-medium">{product.price} EGP</h5>
+                    <h5 className="font-medium">{product.price} LE</h5>
                     {/* <h5 className="line-through hidden md:block text-gray-500">
                       750 EGP
                     </h5> */}

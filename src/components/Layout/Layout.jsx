@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import Navbar from "../Navbar/Navbar";
 import { Outlet, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import { Store } from "../../context/StoreProvider";
 
 export default function Layout() {
   const { pathname } = useLocation();
+  const { openCart, setOpennCart, openMenu, setOpenMenu } = useContext(Store);
 
   useEffect(() => {
     window.scrollTo({
@@ -12,6 +14,18 @@ export default function Layout() {
       behavior: "smooth",
     });
   }, [pathname]);
+
+  useEffect(() => {
+    if (openCart || openMenu) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [openCart, openMenu]);
 
   return (
     <div>
