@@ -13,7 +13,7 @@ export default function ProductDetails() {
   const [selectedLength, setSelectedLength] = useState("");
   const [quantity, setQuantity] = useState(1);
   const { id } = useParams();
-  const queryClient = useQueryClient(); // تم الإبقاء على تعريف واحد فقط هنا
+  const queryClient = useQueryClient();
   const { setOpennCart } = useContext(Store);
 
   // الحصول على الـ cartId أو إنشائه إذا لم يكن موجوداً
@@ -56,7 +56,7 @@ export default function ProductDetails() {
     },
   });
 
-  // دالة Mutation لتحديث الكمية (إذا كنت تستخدمها داخل هذه الصفحة)
+  // دالة Mutation لتحديث الكمية
   const updateQuantityMutation = useMutation({
     mutationFn: async ({ itemId, newQuantity }) => {
       const response = await axios.put(`${baseUrl}cart/${cartId}/${itemId}`, {
@@ -102,10 +102,21 @@ export default function ProductDetails() {
     return <Loading />;
   }
 
+  // تحديد ما إذا كان اللون الحالي المختار متوفر في المخزن
+  const isCurrentColorInStock = data?.colors?.[selectedColorIndex]?.inStock;
+
   return (
     <div className="padding ">
       <div className="grid md:grid-cols-2 grid-cols-1 gap-y-6 pb-12">
-        <div className="w-full md:w-8/12 overflow-hidden mx-auto">
+        <div className="w-full md:w-8/12 overflow-hidden mx-auto relative ">
+          {/* تم ربط كلمة Sold out بحالة اللون الحالي أيضاً لتقديم تجربة مستخدم أفضل */}
+          {!isCurrentColorInStock && (
+            <span className="absolute bg-red-500 z-50 top-7 -right-8 px-2 py-0.5 w-36 text-center rotate-45 text-white text-sm">
+              {" "}
+              Sold out
+            </span>
+          )}
+
           <img
             src={data?.colors?.[selectedColorIndex]?.image}
             alt={data?.name}
@@ -135,10 +146,10 @@ export default function ProductDetails() {
               {data?.price}{" "}
               <span className="text-gray-500 text-lg font-normal">EGP</span>
             </h3>
-            <span>|</span>
+            {/* <span>|</span>
             <h3 className="line-through text-gray-500">
               750 <span className="line-none">EGP</span>
-            </h3>
+            </h3> */}
           </div>
 
           {/* colors */}
@@ -151,13 +162,13 @@ export default function ProductDetails() {
                   setSelectedColorIndex(index);
                   scrollToTop();
                 }}
-                className={`capitalize py-1 px-4 rounded-md font-normal border cursor-pointer transition-all ${
+                className={`capitalize py-1 px-4 text-sm rounded-md font-normal border cursor-pointer transition-all ${
                   selectedColorIndex === index
                     ? "bg-burgundy text-white border-burgundy"
                     : "text-burgundy border-burgundy bg-transparent"
-                }`}
+                } ${!c.inStock ? "opacity-50" : ""}`} // تم إضافة عتامة خفيفة للون غير المتوفر لتوضيح حالته
               >
-                {c.color}
+                {c.color} {!c.inStock && "(Out of stock)"}
               </h4>
             ))}
           </div>
@@ -166,11 +177,11 @@ export default function ProductDetails() {
           <div className="mt-5">
             <h4 className="mb-3">Sizes:</h4>
 
-            {data.category === "Blouses" ? (
+            {data?.category === "Blouses" ? (
               <button className="bg-burgundy text-white border-burgundy py-1 px-4 rounded-md border w-fit">
                 {data?.availableWeights}
               </button>
-            ) : data.category === "sets" ? (
+            ) : data?.category === "Sets" || data?.category === "sets" ? (
               <>
                 <h4 className="mb-3">Blouse size : </h4>
                 <button className="bg-burgundy text-white border-burgundy py-1 px-4 rounded-md border w-fit">
@@ -179,7 +190,7 @@ export default function ProductDetails() {
 
                 <h4 className="mt-3">Skirt size:</h4>
                 <div className="flex flex-wrap gap-3 mt-3">
-                  {data?.availableWeights?.map((size, index) => (
+                  {data?.availableWeights?.slice(0).map((size, index) => (
                     <button
                       key={index}
                       onClick={() => setSelectedSize(size)}
@@ -242,8 +253,6 @@ export default function ProductDetails() {
               Choose quantity:
             </label>
             <div className="relative flex items-center">
-
-              {/* زر النقصان (-) تم إصلاحه هنا لتنقيص الكمية وحمايتها */}
               <button
                 onClick={() => setQuantity((prev) => (prev > 1 ? prev - 1 : 1))}
                 type="button"
@@ -255,7 +264,12 @@ export default function ProductDetails() {
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 12h14"
+                  />
                 </svg>
               </button>
 
@@ -268,7 +282,6 @@ export default function ProductDetails() {
                 required
               />
 
-              {/* زر الزيادة (+) تم إصلاحه هنا لزيادة الكمية */}
               <button
                 onClick={() => setQuantity((prev) => prev + 1)}
                 type="button"
@@ -280,25 +293,50 @@ export default function ProductDetails() {
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14m-7 7V5" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 12h14m-7 7V5"
+                  />
                 </svg>
               </button>
             </div>
           </form>
 
-          {/* زر add to bag */}
-          <button
-            onClick={handleAddToCart}
-            disabled={addToCartMutation.isPending}
-            className={`btn mt-8 flex items-center justify-center space-x-2 w-full md:w-auto ${
-              addToCartMutation.isPending ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-          >
-            <ShoppingBag size={18} />
-            <h6 className="capitalize font-medium">
-              {addToCartMutation.isPending ? "Adding..." : "add to bag"}
-            </h6>
-          </button>
+          {/* زر add to bag - تم إصلاح الشرط هنا بنجاح */}
+          {data?.inStock && data?.colors?.[selectedColorIndex]?.inStock ? (
+            <button
+              onClick={handleAddToCart}
+              disabled={addToCartMutation.isPending}
+              className={`btn mt-8 flex items-center justify-center space-x-2 w-full md:w-auto ${
+                addToCartMutation.isPending
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+              }`}
+            >
+               <svg
+              className="Icon Icon--cart w-5 h-5 text-white hover:text-black bag transition-colors"
+              role="presentation"
+              viewBox="0 0 17 20"
+            >
+              <path
+                d="M0 20V4.995l1 .006v.015l4-.002V4c0-2.484 1.274-4 3.5-4C10.518 0 12 1.48 12 4v1.012l5-.003v.985H1V19h15V6.005h1V20H0zM11 4.49C11 2.267 10.507 1 8.5 1 6.5 1 6 2.27 6 4.49V5l5-.002V4.49z"
+                fill="#fff"
+              ></path>
+            </svg>
+              <h6 className="capitalize font-medium">
+                {addToCartMutation.isPending ? "Adding..." : "add to bag"}
+              </h6>
+            </button>
+          ) : (
+            <button
+              className="btnDisabled mt-8 w-full md:w-auto"
+              disabled={true}
+            >
+              Sold out
+            </button>
+          )}
         </div>
       </div>
     </div>
