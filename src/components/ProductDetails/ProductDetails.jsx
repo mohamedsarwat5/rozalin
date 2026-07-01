@@ -200,7 +200,7 @@ export default function ProductDetails() {
                           : "text-burgundy border-burgundy bg-transparent"
                       }`}
                     >
-                      {size} {size !== "one size" && "kg"}
+                      {size} 
                     </button>
                   ))}
                 </div>
@@ -218,7 +218,7 @@ export default function ProductDetails() {
                           : "text-burgundy border-burgundy bg-transparent"
                       }`}
                     >
-                      {size} {size !== "one size" && "kg"}
+                      {size}
                     </button>
                   ))}
                 </div>
