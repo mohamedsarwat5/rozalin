@@ -130,7 +130,11 @@ export default function Navbar() {
           <nav className="space-y-5 font-light tracking-wide text-[15px] p-8 mt-16 ">
             {/* Home */}
             <div className="border-b border-slate-300 pb-4 acitve">
-              <NavLink to={"/"} className="hover:text-burgundy block">
+              <NavLink
+                onClick={() => setOpenMenu(false)}
+                to={"/"}
+                className="hover:text-burgundy block"
+              >
                 Home
               </NavLink>
             </div>
@@ -138,8 +142,9 @@ export default function Navbar() {
             {/* New Arrival */}
             <div className="border-b border-slate-300 pb-4 acitve">
               <NavLink
+                onClick={() => setOpenMenu(false)}
                 to={"/new"}
-                className="hover:text-burgundy font-normal block"
+                className="hover:text-burgundy  block"
               >
                 New Arrival
               </NavLink>
@@ -147,7 +152,11 @@ export default function Navbar() {
 
             {/* Best Seller */}
             <div className="border-b border-slate-300 pb-4 acitve">
-              <NavLink to={"/bestSeller"} className="hover:text-burgundy block">
+              <NavLink
+                onClick={() => setOpenMenu(false)}
+                to={"/bestSeller"}
+                className="hover:text-burgundy block"
+              >
                 Best Seller
               </NavLink>
             </div>

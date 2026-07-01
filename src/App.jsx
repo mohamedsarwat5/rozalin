@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Checkout from "./components/CheckOut/CheckOut";
 import { Toaster } from "sonner";
 import StoreProvider from "./context/StoreProvider";
+import BestSeller from "./components/BestSeller/BestSeller";
 
 export default function App() {
   const client = new QueryClient();
@@ -19,6 +20,8 @@ export default function App() {
         { index: true, element: <Home /> },
         { path: "details/:id", element: <ProductDetails /> },
         { path: "checkout", element: <Checkout /> },
+        { path: "bestSeller", element: <BestSeller /> },
+
       ],
     },
   ]);

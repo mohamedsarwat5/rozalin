@@ -32,7 +32,7 @@ export default function Home() {
   return (
     <div>
       <div className="h-105 md:min-h-dvh  w-full bg"></div>
-      <div className="padding grid md:grid-cols-4 grid-cols-2 gap-2">
+      <div className="padding grid md:grid-cols-4 grid-cols-2 gap-3">
         {data?.map((product, i) => (
           <motion.div
             key={i}
@@ -42,11 +42,11 @@ export default function Home() {
             transition={{ duration: 0.35 }}
             className="mb-6 relative overflow-hidden"
           >
-            {!product.inStock&& (
-          <span className="absolute bg-red-500 z-50 top-5 -right-11 lg:top-7 lg:-right-8 px-2 py-0.5 w-36 text-center rotate-45 text-white text-sm">
-              {" "}
-              Sold out
-            </span>
+            {!product.inStock && (
+              <span className="absolute bg-red-500 z-50 top-5 -right-11 lg:top-7 lg:-right-8 px-2 py-0.5 w-36 text-center rotate-45 text-white text-sm">
+                {" "}
+                Sold out
+              </span>
             )}
             <NavLink to={`/details/${product._id}`}>
               <div className=" overflow-hidden mb-4 rounded-md aspect-2/3 ">
@@ -60,7 +60,9 @@ export default function Home() {
                 <h3 className="capitalize font-medium text-burgundy truncate ">
                   {product.name}
                 </h3>
-                <p className="truncate capitalize text-xs mb-2">{product.description}</p>
+                <p className="truncate capitalize text-xs mb-2">
+                  {product.description}
+                </p>
 
                 <div className="flex items-center ">
                   <div className="flex items-center space-x-3 text-sm">
