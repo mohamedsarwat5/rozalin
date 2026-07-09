@@ -200,7 +200,7 @@ export default function ProductDetails() {
                           : "text-burgundy border-burgundy bg-transparent"
                       }`}
                     >
-                      {size} 
+                      {size}
                     </button>
                   ))}
                 </div>
@@ -228,7 +228,7 @@ export default function ProductDetails() {
 
           {data?.category !== "Blouses" && (
             <div className="mt-5">
-              <h4 className="mb-3">Skirt Length:</h4>
+              <h4 className="mb-3"> {data?.category === "Abaya" ?"length":"Skirt Length:"} </h4>
               <div className="flex flex-wrap gap-3">
                 {data?.availableLengths?.map((length, index) => (
                   <button

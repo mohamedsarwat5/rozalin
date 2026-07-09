@@ -308,7 +308,7 @@ export default function Navbar() {
                                 <span>
                                   Size:{" "}
                                   <strong className="text-gray-700">
-                                    {item.selectedWeight} kg
+                                    {item.selectedWeight} 
                                   </strong>
                                 </span>
                               </>
