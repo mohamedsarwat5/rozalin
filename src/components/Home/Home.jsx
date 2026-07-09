@@ -42,8 +42,8 @@ export default function Home() {
   }
   return (
     <div>
-      <div className=" min-h-fit" >
-        <img src="../../../public/three.png" alt="" />
+      <div className=" min-h-fit w-full" >
+        <img src="../../../public/three.png" className="w-full" alt="" />
       </div>
       <div className="padding grid md:grid-cols-2 grid-cols-1 gap-3">
         {/* {data?.map((product, i) => (
