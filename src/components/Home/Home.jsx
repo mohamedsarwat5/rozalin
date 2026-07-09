@@ -42,7 +42,9 @@ export default function Home() {
   }
   return (
     <div>
-      <div className=" min-h-dvh  w-full bg"></div>
+      <div className=" min-h-fit" >
+        <img src="../../../public/three.png" alt="" />
+      </div>
       <div className="padding grid md:grid-cols-2 grid-cols-1 gap-3">
         {/* {data?.map((product, i) => (
           <motion.div
