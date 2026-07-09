@@ -42,7 +42,7 @@ body {
 
 }
 
-.active{
+.active {
   @apply text-burgundy font-medium
 }
 
@@ -55,9 +55,8 @@ body {
   @apply bg-burgundy px-4 py-2 rounded-md w-full mt-7 flex text-text items-center justify-center space-x-3 border border-transparent
 }
 
-.btnDisabled{
+.btnDisabled {
   @apply bg-white px-4 py-2 rounded-md w-full mt-7 flex text-burgundy items-center justify-center space-x-3 border border-burgundy capitalize
-
 }
 
 
@@ -81,8 +80,14 @@ body {
 }
 
 
+.category{
+  transition: all .4s ;
+  /* font-family: ; */
+}
 
-
+.category:hover {
+  @apply text-white! border-white bg-transparent
+}
 
 
 

@@ -8,6 +8,8 @@ import Checkout from "./components/CheckOut/CheckOut";
 import { Toaster } from "sonner";
 import StoreProvider from "./context/StoreProvider";
 import BestSeller from "./components/BestSeller/BestSeller";
+import CategoryPage from "./components/CategoryPage/CategoryPage";
+import NewArrivals from "./components/NewArrivals/NewArrivals";
 
 export default function App() {
   const client = new QueryClient();
@@ -21,6 +23,8 @@ export default function App() {
         { path: "details/:id", element: <ProductDetails /> },
         { path: "checkout", element: <Checkout /> },
         { path: "bestSeller", element: <BestSeller /> },
+        { path: "newarrival", element: <NewArrivals /> },
+        { path: "category/:categoryName", element: <CategoryPage /> },
 
       ],
     },

@@ -5,8 +5,19 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import Loading from "../Loading/Loading";
+// import blouse from "../../../public/blouse.jpg";
+// import skirt from "../../../public/skirt.webp";
+// import set from "../../../public/set.webp";
+// import abaya from "../../../public/abaya.webp";
 
 export default function Home() {
+  const Images = [
+    { name: "sets", src: "../../../public/set.webp" },
+    { name: "abaya", src: "../../../public/abaya.webp" },
+    { name: "blouses", src: "../../../public/blouse.jpg" },
+    { name: "skirts", src: "../../../public/skirt.webp" },
+  ];
+
   useEffect(() => {
     let cartId = localStorage.getItem("cartId");
     if (!cartId) {
@@ -32,8 +43,8 @@ export default function Home() {
   return (
     <div>
       <div className="h-105 md:min-h-dvh  w-full bg"></div>
-      <div className="padding grid md:grid-cols-4 grid-cols-2 gap-3">
-        {data?.map((product, i) => (
+      <div className="padding grid md:grid-cols-2 grid-cols-1 gap-3">
+        {/* {data?.map((product, i) => (
           <motion.div
             key={i}
             initial={{ opacity: 0, scale: 0.7 }}
@@ -67,9 +78,6 @@ export default function Home() {
                 <div className="flex items-center ">
                   <div className="flex items-center space-x-3 text-sm">
                     <h5 className="font-medium">{product.price} LE</h5>
-                    {/* <h5 className="line-through hidden md:block text-gray-500">
-                      750 EGP
-                    </h5> */}
                   </div>
                   <div className="flex mt-1 items-center text-xs ml-auto">
                     <h6 className="">4.9</h6>
@@ -79,6 +87,25 @@ export default function Home() {
               </div>
             </NavLink>
           </motion.div>
+        ))} */}
+
+        {Images.map((e, i) => (
+          <div key={i} className="aspect-3/4 overflow-hidden relative">
+            {/* overlay */}
+            <div className="absolute inset-0 bg-black/40">
+              <div className="absolute left-7 bottom-7  md:left-12 md:bottom-12 z-20">
+                <h5 className="text-white capitalize  text-xl">{e.name}</h5>
+                <NavLink
+                  className={`bg-white  category text-black font-light px-5 py-1.5 mt-3 md:mt-5 block capitalize border border-transparent `}
+                  to=  {`category/${e.name}`}
+                >
+
+                  {`step in to ${e.name}`}
+                </NavLink>
+              </div>
+            </div>
+            <img className="w-full h-full object-cover" src={e.src} alt="" />
+          </div>
         ))}
       </div>
     </div>

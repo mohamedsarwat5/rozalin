@@ -22,7 +22,7 @@ export default function Navbar() {
   const [isCollectionsOpen, setIsCollectionsOpen] = useState(false);
 
   // مصفوفة تحتوي على العناصر الفرعية لـ All collections
-  const subCollections = ["Dresses", "Sets", "Blouses", "Skirts", "Abaya"];
+  const subCollections = ["Sets", "Blouses", "Skirts", "Abaya"];
 
   const queryClient = useQueryClient();
 
@@ -143,7 +143,7 @@ export default function Navbar() {
             <div className="border-b border-slate-300 pb-4 acitve">
               <NavLink
                 onClick={() => setOpenMenu(false)}
-                to={"/new"}
+                to={"/newarrival"}
                 className="hover:text-burgundy  block"
               >
                 New Arrival
@@ -184,13 +184,14 @@ export default function Navbar() {
                 }`}
               >
                 {subCollections.map((item, index) => (
-                  <a
-                    href="#"
+                  <NavLink
+                    onClick={() => setOpenMenu(false)}
+                    to={`category/${item}`}
                     key={index}
                     className="block hover:text-burgundy transition-colors"
                   >
                     {item}
-                  </a>
+                  </NavLink>
                 ))}
               </div>
             </div>
@@ -308,7 +309,7 @@ export default function Navbar() {
                                 <span>
                                   Size:{" "}
                                   <strong className="text-gray-700">
-                                    {item.selectedWeight} 
+                                    {item.selectedWeight}
                                   </strong>
                                 </span>
                               </>

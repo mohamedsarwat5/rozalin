@@ -120,7 +120,7 @@ export default function ProductDetails() {
           <img
             src={data?.colors?.[selectedColorIndex]?.image}
             alt={data?.name}
-            className="object-cover aspect-3/4 "
+            className="object-cover aspect-2/3 "
           />
         </div>
 
