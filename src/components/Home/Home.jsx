@@ -12,11 +12,11 @@ import Loading from "../Loading/Loading";
 
 export default function Home() {
   const Images = [
-    { name: "sets", src: "../../../public/set.webp" },
-    { name: "abaya", src: "../../../public/abaya.webp" },
-    { name: "blouses", src: "../../../public/blouse.jpg" },
-    { name: "skirts", src: "../../../public/skirt.webp" },
-  ];
+  { name: "sets", src: "/set.webp" },
+  { name: "abaya", src: "/abaya.webp" },    
+  { name: "blouses", src: "/blouse.jpg" },
+  { name: "skirts", src: "/skirt.webp" },
+];
 
   useEffect(() => {
     let cartId = localStorage.getItem("cartId");
