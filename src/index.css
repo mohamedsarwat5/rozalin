@@ -74,8 +74,8 @@ body {
 
 
 .bg {
-  background: url("/bg.jpg") no-repeat;
-  background-position: center top;
+  background: url("/three.png") no-repeat;
+  background-position: center ;
   background-size: cover;
 }
 

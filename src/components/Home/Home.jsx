@@ -13,7 +13,7 @@ import Loading from "../Loading/Loading";
 export default function Home() {
   const Images = [
   { name: "sets", src: "/set.webp" },
-  { name: "abaya", src: "/abaya.webp" },    
+  { name: "abaya", src: "/abaya.webp" },
   { name: "blouses", src: "/blouse.jpg" },
   { name: "skirts", src: "/skirt.webp" },
 ];
@@ -42,7 +42,7 @@ export default function Home() {
   }
   return (
     <div>
-      <div className="h-105 md:min-h-dvh  w-full bg"></div>
+      <div className=" min-h-dvh  w-full bg"></div>
       <div className="padding grid md:grid-cols-2 grid-cols-1 gap-3">
         {/* {data?.map((product, i) => (
           <motion.div
