@@ -22,7 +22,7 @@ export default function Navbar() {
   const [isCollectionsOpen, setIsCollectionsOpen] = useState(false);
 
   // مصفوفة تحتوي على العناصر الفرعية لـ All collections
-  const subCollections = ["Sets", "Blouses", "Skirts", "Abaya","Soiree"];
+  const subCollections = ["Sets", "Blouses", "Skirts", "Abaya","Soirée","Dresses"];
 
   const queryClient = useQueryClient();
 
