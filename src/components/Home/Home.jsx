@@ -12,11 +12,11 @@ import Loading from "../Loading/Loading";
 
 export default function Home() {
   const Images = [
-  { name: "sets", src: "/set.webp" },
-  { name: "abaya", src: "/abaya.webp" },
-  { name: "blouses", src: "/blouse.jpg" },
-  { name: "skirts", src: "/skirt.webp" },
-];
+    { name: "sets", src: "/set.webp" },
+    { name: "abaya", src: "/abaya.webp" },
+    { name: "blouses", src: "/blouse.jpg" },
+    { name: "skirts", src: "/skirt.webp" },
+  ];
 
   useEffect(() => {
     let cartId = localStorage.getItem("cartId");
@@ -42,8 +42,14 @@ export default function Home() {
   }
   return (
     <div>
-      <div className=" min-h-fit w-full" >
-        <img src="/three.png" className="w-full" alt="" />
+      <div className=" min-h-fit w-full relative">
+        <div className="absolute inset-0 bg-black/30 flex items-center justify-center flex-col text-white text-xl">
+          <h1 className="welcome">"Welcome To ROZALIN"</h1>
+          <p className="capitalize text-center px-2 mt-3 ">
+            Because Your modest elegance is worth it.
+          </p>
+        </div>
+        <img src="/bg.webp" className="w-full" alt="" />
       </div>
       <div className="padding grid md:grid-cols-2 grid-cols-1 gap-3">
         {/* {data?.map((product, i) => (
@@ -99,9 +105,8 @@ export default function Home() {
                 <h5 className="text-white capitalize  text-xl">{e.name}</h5>
                 <NavLink
                   className={`bg-white  category text-black font-light px-5 py-1.5 mt-3 md:mt-5 block capitalize border border-transparent `}
-                  to=  {`category/${e.name}`}
+                  to={`category/${e.name}`}
                 >
-
                   {`step in to ${e.name}`}
                 </NavLink>
               </div>

@@ -1,18 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Jost:ital,wght@0,100..900;1,100..900&family=Proza+Libre:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap');
-/* @font-face {
-  font-family: "cocogoose-pro" ;
-  src:
-    url("./cocogoose-pro.thin.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
-.logo{
-  font-family: "cocogoose-pro"
-} */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Proza+Libre:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap');
 @import "tailwindcss";
 
 :root {
   --font-family: "Proza Libre", sans-serif;
+  --cormorant: "Cormorant Garamond", serif;
   --burgundy: #74142f;
   --bg: #fff6f2;
   --text: #f7f2f3;
@@ -25,16 +16,13 @@
   --color-text: var(--text);
   --color-desc: var(--desc);
   --font-spayre: "Sapyre", sans-serif;
+  --font-cormorant: var(--cormorant);
 }
-
+.welcome{
+   font-family: "Cormorant Garamond", serif;
+}
 body {
   font-family: var(--font-family);
-  /* background-image: url("/4.jpg");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover; */
-
-  /* background-color: var(--bg); */
 }
 
 .image {
@@ -74,13 +62,13 @@ body {
 
 
 
-.category{
-  transition: all .4s ;
+.category {
+  transition: all .4s;
   /* font-family: ; */
 }
 
 .category:hover {
-  @apply text-white! border-white bg-transparent
+  @apply text-white ! border-white bg-transparent
 }
 
 
