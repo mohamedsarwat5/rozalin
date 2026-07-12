@@ -16,7 +16,7 @@
   --color-bg: var(--bg);
   --color-text: var(--text);
   --color-desc: var(--desc);
-  --font-spayre: "Sapyre", sans-serif;
+  /* --font-spayre: "Sapyre", sans-serif; */
   --font-cormorant: var(--cormorant);
 }
 .welcome{
