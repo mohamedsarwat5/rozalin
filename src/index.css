@@ -69,7 +69,7 @@ body {
 }
 
 .category:hover {
-  @apply text-white ! border-white bg-transparent
+  @apply text-white border-white bg-transparent
 }
 
 

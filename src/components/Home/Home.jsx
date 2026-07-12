@@ -44,8 +44,8 @@ export default function Home() {
     <div>
       <div className=" min-h-fit w-full relative">
         <div className="absolute inset-0 bg-black/30 flex items-center justify-center flex-col text-white text-xl">
-          <h1 className="welcome">"Welcome To ROZALIN"</h1>
-          <p className="capitalize text-center px-2 mt-3 ">
+          <h1 className="welcome text-[23px]">"Welcome To ROZALIN"</h1>
+          <p className="capitalize text-center px-2 text-[21px] font-cormorant">
             Because Your modest elegance is worth it.
           </p>
         </div>
