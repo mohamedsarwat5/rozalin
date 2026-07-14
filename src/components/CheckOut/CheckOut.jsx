@@ -227,7 +227,7 @@ export default function Checkout() {
               {/* 👈 تعديل السيلكت أوبشن للمحافظات */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Governorate
+                  Governorate for shipping fees
                 </label>
                 <select
                   name="governorate"
@@ -239,7 +239,7 @@ export default function Checkout() {
                   <option value="" disabled>Choose your governorate...</option>
                   {Object.entries(GOVERNORATES).map(([gov, price]) => (
                     <option key={gov} value={gov}>
-                      {gov} 
+                      {gov}
                     </option>
                   ))}
                 </select>

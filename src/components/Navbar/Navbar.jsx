@@ -373,7 +373,7 @@ export default function Navbar() {
             {cartItems.length > 0 && (
               <div className="p-4 border-t bg-gray-50">
                 <div className="flex justify-between text-base font-semibold text-burgundy mb-4">
-                  <span>Total Price:</span>
+                  <span>Total without shipping:</span>
                   <span>{data?.totalPrice} EGP</span>
                 </div>
                 <NavLink
