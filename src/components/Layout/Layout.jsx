@@ -3,6 +3,7 @@ import Navbar from "../Navbar/Navbar";
 import { Outlet, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Store } from "../../context/StoreProvider";
+import Footer from "../Footer/Footer";
 
 export default function Layout() {
   const { pathname } = useLocation();
@@ -39,6 +40,7 @@ export default function Layout() {
         >
           <Navbar />
           <Outlet key={pathname} />
+          <Footer />
         </motion.div>
       </AnimatePresence>
     </div>

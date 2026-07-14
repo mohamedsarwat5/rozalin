@@ -5,6 +5,38 @@ import { useNavigate } from "react-router-dom";
 import Loading from "../Loading/Loading";
 import { toast } from "sonner";
 
+// 👈 كائن المحافظات وأسعار الشحن الخاصة بها خارج الكومبوننت لعدم إعادة إنشائه مع كل رندر
+const GOVERNORATES = {
+  "Cairo": 70,
+  "Giza": 70,
+  "New Cities": 80,
+  "Alexandria": 90,
+  "Qalyubia": 80,
+  "Sharqia": 90,
+  "Dakahlia": 90,
+  "Beheira": 90,
+  "Kafr El Sheikh": 90,
+  "Gharbia": 90,
+  "Monufia": 90,
+  "Damietta": 90,
+  "Port Said": 90,
+  "Ismailia": 90,
+  "Suez": 90,
+  "North Sinai": 130,
+  "South Sinai": 130,
+  "Matrouh": 130,
+  "Red Sea": 130,
+  "New Valley": 130,
+  "Fayoum": 100,
+  "Beni Suef": 100,
+  "Minya": 100,
+  "Assiut": 100,
+  "Sohag": 100,
+  "Qena": 100,
+  "Luxor": 100,
+  "Aswan": 100
+};
+
 export default function Checkout() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -12,11 +44,12 @@ export default function Checkout() {
   const baseUrl = import.meta.env.VITE_BASE_URL;
   const cartId = localStorage.getItem("cartId");
 
-  // حالة استمارة الشحن
+  // حالة استمارة الشحن (تمت إضافة governorate)
   const [formData, setFormData] = useState({
     customerName: "",
     phone: "",
     address: "",
+    governorate: "", // 👈 تبدأ فارغة ليُجبر العميل على الاختيار
   });
 
   // 1. جلب المنتجات الحالية للعربة لعرضها في ملخص الطلب
@@ -34,6 +67,9 @@ export default function Checkout() {
     queryFn: getCartItems,
     enabled: !!cartId,
   });
+
+  // 👈 حساب قيمة شحن المحافظة المحددة ديناميكياً
+  const shippingPrice = formData.governorate ? GOVERNORATES[formData.governorate] : 0;
 
   // 2. الـ Mutation الخاص بإنشاء الطلب وتصفير العربة
   const createOrderMutation = useMutation({
@@ -69,6 +105,7 @@ export default function Checkout() {
     const trimmedName = formData.customerName.trim();
     const trimmedPhone = formData.phone.trim();
     const trimmedAddress = formData.address.trim();
+    const selectedGov = formData.governorate; // 👈 المحافظة المختارة
 
     // 2. التحقق من أن العربة ليست فارغة
     if (!cartId || !cartData || cartData.items.length === 0) {
@@ -97,16 +134,25 @@ export default function Checkout() {
       return;
     }
 
+    // 👈 6. التحقق من اختيار المحافظة
+    if (!selectedGov) {
+      toast.error("Please select your governorate.");
+      return;
+    }
+
     // إذا مرت البيانات من كل الفحوصات بنجاح، يتم إرسال الطلب
     const orderPayload = {
       cartId,
       customerName: trimmedName,
       phone: trimmedPhone,
       address: trimmedAddress,
+      governorate: selectedGov, // 👈 إرسال المحافظة
+      shippingPrice: GOVERNORATES[selectedGov], // 👈 إرسال قيمة الشحن
     };
 
     createOrderMutation.mutate(orderPayload);
   };
+
   if (isLoading) return <Loading />;
 
   const cartItems = cartData?.items || [];
@@ -178,18 +224,29 @@ export default function Checkout() {
                 />
               </div>
 
+              {/* 👈 تعديل السيلكت أوبشن للمحافظات */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Governorate
+                </label>
+                <select
+                  name="governorate"
+                  required
+                  value={formData.governorate}
+                  onChange={handleInputChange}
+                  className="w-full border p-2.5 rounded-md focus:ring-1 focus:ring-burgundy focus:outline-none bg-white text-gray-800"
+                >
+                  <option value="" disabled>Choose your governorate...</option>
+                  {Object.entries(GOVERNORATES).map(([gov, price]) => (
+                    <option key={gov} value={gov}>
+                      {gov} 
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               {/* الحل السحري: الزر هنا محصن داخل الفورم ومحمي من الاختفاء */}
               <div className="pt-4 border-t mt-6">
-                {/* <button
-                  type="submit"
-                  disabled={createOrderMutation.isPending}
-                  className="w-full bg-burgundy text-white py-3 rounded-md font-medium hover:bg-opacity-90 transition-all capitalize shadow disabled:bg-gray-400 cursor-pointer text-center block text-base"
-                >
-                  {createOrderMutation.isPending
-                    ? "Processing your order..."
-                    : "Place Order (Cash on Delivery)"}
-                </button> */}
-
                 <button
                   type="submit"
                   disabled={createOrderMutation.isPending}
@@ -213,7 +270,6 @@ export default function Checkout() {
               {cartItems.map((item, index) => (
                 <div
                   key={item._id}
-                  // إزالة divide-y و space-y واستخدام pb-4 للتوسيع، و border-b للخط الفاصل
                   className={`flex space-x-4 py-4 items-start ${
                     index !== cartItems.length - 1
                       ? "border-b border-gray-200"
@@ -257,13 +313,15 @@ export default function Checkout() {
             <div className="border-t mt-6 pt-4 space-y-2">
               <div className="flex justify-between text-sm text-gray-600">
                 <span>Shipping</span>
-                <span className="text-green-600 font-medium">
-                  Free Shipping
+                {/* 👈 إذا اختار العميل محافظة يظهر سعرها، وإذا لم يختر يظهر تنبيه بالاختيار */}
+                <span className={shippingPrice > 0 ? "text-gray-800 font-medium" : "text-amber-600 font-medium"}>
+                  {shippingPrice > 0 ? `${shippingPrice} EGP` : "Select Governorate"}
                 </span>
               </div>
               <div className="flex justify-between text-base font-bold text-burgundy pt-2 border-t">
                 <span>Total Amount:</span>
-                <span>{cartData?.totalPrice} EGP</span>
+                {/* 👈 جمع سعر العربة الأصلي مع سعر شحن المحافظة المختارة ديناميكياً */}
+                <span>{((cartData?.totalPrice || 0) + shippingPrice)} EGP</span>
               </div>
             </div>
           </div>

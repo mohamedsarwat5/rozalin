@@ -10,6 +10,10 @@ import StoreProvider from "./context/StoreProvider";
 import BestSeller from "./components/BestSeller/BestSeller";
 import CategoryPage from "./components/CategoryPage/CategoryPage";
 import NewArrivals from "./components/NewArrivals/NewArrivals";
+import Exchange from "./components/Exchange/Exchange";
+import Privacy from "./components/Privacy/Privacy";
+import Contact from "./components/Contact/Contact";
+import Shipping from "./components/Shipping/Shipping";
 
 export default function App() {
   const client = new QueryClient();
@@ -24,8 +28,11 @@ export default function App() {
         { path: "checkout", element: <Checkout /> },
         { path: "bestSeller", element: <BestSeller /> },
         { path: "newarrival", element: <NewArrivals /> },
+        { path: "exchange", element: <Exchange /> },
+        { path: "privacy", element: <Privacy /> },
+        { path: "contact", element: <Contact /> },
+        { path: "shipping", element: <Shipping /> },
         { path: "category/:categoryName", element: <CategoryPage /> },
-
       ],
     },
   ]);

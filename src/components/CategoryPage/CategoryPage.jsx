@@ -32,6 +32,14 @@ export default function CategoryPage() {
 
   return (
     <div>
+      <div className=" flex items-center justify-center flex-col ">
+        <div className="flex items-center justify-center space-x-2">
+          <i className="fa-solid fa-heart text-burgundy"></i>
+          <h2 className="capitalize font-semibold text-xl">{categoryName}</h2>
+          <i className="fa-solid fa-heart text-burgundy"></i>
+        </div>
+        {/* <h1 className="tracking-wider">Because you worth it</h1> */}
+      </div>
       <div className="padding grid md:grid-cols-4 grid-cols-2 gap-3">
         {products?.map((product, i) => (
           <motion.div
