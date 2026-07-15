@@ -140,7 +140,7 @@ export default function Navbar() {
             </div>
 
             {/* New Arrival */}
-            <div className="border-b border-slate-300 pb-4 acitve">
+            {/* <div className="border-b border-slate-300 pb-4 acitve">
               <NavLink
                 onClick={() => setOpenMenu(false)}
                 to={"/newarrival"}
@@ -148,7 +148,7 @@ export default function Navbar() {
               >
                 New Arrival
               </NavLink>
-            </div>
+            </div> */}
 
             {/* Best Seller */}
             <div className="border-b border-slate-300 pb-4 acitve">
