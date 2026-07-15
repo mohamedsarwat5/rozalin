@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import Loading from "../Loading/Loading";
 import { toast } from "sonner";
 import { Store } from "../../context/StoreProvider";
+import { Helmet } from 'react-helmet-async'; // مستوردة بالفعل وممتازة
 
 export default function ProductDetails() {
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
@@ -105,8 +106,33 @@ export default function ProductDetails() {
   // تحديد ما إذا كان اللون الحالي المختار متوفر في المخزن
   const isCurrentColorInStock = data?.colors?.[selectedColorIndex]?.inStock;
 
+  // استخراج تفاصيل المنتج للـ Meta Tags لتسهيل القراءة والكتابة
+  const productTitle = data?.name ? `${data.name} | Rozalin` : "Rozalin Store";
+  const productDesc = data?.description || "تسوقي أحدث الفساتين والملابس النسائية الأنيقة من متجر روزالين.";
+  const productImage = data?.colors?.[selectedColorIndex]?.image || "";
+  const productUrl = `https://rozalin-store.com/product/${id}`;
+
   return (
     <div className="padding ">
+      {/* 🚀 إضافة الـ Helmet هنا ديناميكياً بناءً على بيانات المنتج */}
+      <Helmet>
+        <title>{productTitle}</title>
+        <meta name="description" content={productDesc} />
+
+        {/* Open Graph / Facebook (لمشاركة الروابط بشكل مميز) */}
+        <meta property="og:type" content="product" />
+        <meta property="og:title" content={productTitle} />
+        <meta property="og:description" content={productDesc} />
+        <meta property="og:image" content={productImage} />
+        <meta property="og:url" content={productUrl} />
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={productTitle} />
+        <meta name="twitter:description" content={productDesc} />
+        <meta name="twitter:image" content={productImage} />
+      </Helmet>
+
       <div className="grid md:grid-cols-2 grid-cols-1 gap-y-6 pb-12">
         <div className="w-full md:w-8/12 overflow-hidden mx-auto relative ">
           {/* تم ربط كلمة Sold out بحالة اللون الحالي أيضاً لتقديم تجربة مستخدم أفضل */}
