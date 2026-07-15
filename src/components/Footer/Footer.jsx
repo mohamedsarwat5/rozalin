@@ -19,7 +19,7 @@ export default function Footer() {
           ))}
         </div>
       </div>
-       <p className="text-center mt-2 pb-3">©Copyright {new Date().getFullYear()} - <span className="text-burgundy font-semibold">Rozalin Store</span> - All Rights Reserved  </p>
+       <p className="text-center text-xs mt-2 pb-3">©Copyright {new Date().getFullYear()} - <span className="text-burgundy font-semibold">Rozalin Store</span> - All Rights Reserved  </p>
     </div>
   );
 }
