@@ -15,7 +15,7 @@ export default function Footer() {
       <div className="p-6">
         <div className="flex flex-col ml-4 justify-center md:flex-row gap-x-16 gap-y-3">
           {navFooter.map(({ name, path }) => (
-            <NavLink to={path}>{name}</NavLink>
+            <NavLink key={path} to={path}>{name}</NavLink>
           ))}
         </div>
       </div>

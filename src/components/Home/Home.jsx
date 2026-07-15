@@ -5,6 +5,7 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import Loading from "../Loading/Loading";
+import SliderBestSeller from "../SliderBestSeller/SliderBestSeller";
 // import blouse from "../../../public/blouse.jpg";
 // import skirt from "../../../public/skirt.webp";
 // import set from "../../../public/set.webp";
@@ -51,6 +52,9 @@ export default function Home() {
         </div>
         <img src="/bg.webp" className="w-full" alt="" />
       </div>
+
+      <SliderBestSeller />
+
       <div className="padding grid md:grid-cols-2 grid-cols-1 gap-3">
         {Images.map((e, i) => (
           <div key={i} className="aspect-3/4 overflow-hidden relative">
