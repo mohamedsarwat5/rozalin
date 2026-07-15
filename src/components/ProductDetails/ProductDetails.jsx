@@ -1,12 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { ShoppingBag } from "lucide-react";
+import { Share2, ShoppingBag } from "lucide-react";
 import React, { useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import Loading from "../Loading/Loading";
 import { toast } from "sonner";
 import { Store } from "../../context/StoreProvider";
-import { Helmet } from 'react-helmet-async'; // مستوردة بالفعل وممتازة
+import { Helmet } from "react-helmet-async"; // مستوردة بالفعل وممتازة
 
 export default function ProductDetails() {
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
@@ -108,9 +108,40 @@ export default function ProductDetails() {
 
   // استخراج تفاصيل المنتج للـ Meta Tags لتسهيل القراءة والكتابة
   const productTitle = data?.name ? `${data.name} | Rozalin` : "Rozalin Store";
-  const productDesc = data?.description || "تسوقي أحدث الفساتين والملابس النسائية الأنيقة من متجر روزالين.";
+  const productDesc =
+    data?.description ||
+    "تسوقي أحدث الفساتين والملابس النسائية الأنيقة من متجر روزالين.";
   const productImage = data?.colors?.[selectedColorIndex]?.image || "";
   const productUrl = `https://rozalin-store.com/product/${id}`;
+
+  const handleShare = async () => {
+    // نجيب رابط الصفحة الحالية ديناميكياً من المتصفح
+    const currentUrl = window.location.href;
+
+    // بيانات المشاركة
+    const shareData = {
+      title: data?.name ? `${data.name} | Rozalin` : "Rozalin Store",
+      text: `شاهدي هذا الفستان الأنيق من متجر روزالين: ${data?.name}`,
+      url: currentUrl,
+    };
+
+    // التأكد من أن المتصفح يدعم الـ Web Share API
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.log("Error sharing:", err);
+      }
+    } else {
+      // خطة بديلة: إذا كان المتصفح لا يدعم المشاركة (مثل بعض متصفحات الكمبيوتر)
+      try {
+        await navigator.clipboard.writeText(currentUrl);
+        toast.success("تم نسخ رابط الفستان بنجاح!");
+      } catch (err) {
+        toast.error("فشل نسخ الرابط، يرجى نسخه يدوياً.");
+      }
+    }
+  };
 
   return (
     <div className="padding ">
@@ -152,15 +183,28 @@ export default function ProductDetails() {
 
         {/* data */}
         <div>
-          <div className="flex flex-col justify-between ">
-            <h2 className="text-burgundy font-bold md:text-2xl text-xl mb-3 capitalize">
-              {data?.name}
-            </h2>
-            <div className="flex items-center">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <i key={i} className="fa-solid fa-star text-[#ECB018]"></i>
-              ))}
-              <span className="ml-2 text-sm"> (4.9)</span>
+          <div className="flex justify-between items-center">
+            <div className="flex flex-col justify-between ">
+              <h2 className="text-burgundy font-bold md:text-2xl text-xl mb-3 capitalize">
+                {data?.name}
+              </h2>
+
+              <div className="flex items-center">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <i key={i} className="fa-solid fa-star text-[#ECB018]"></i>
+                ))}
+                <span className="ml-2 text-sm"> (4.9)</span>
+              </div>
+            </div>
+            <div>
+              <button
+                onClick={handleShare}
+                className=" flex cursor-pointer items-center justify-center space-x-2 border border-burgundy text-burgundy py-2 px-6 rounded-md hover:bg-burgundy hover:text-white transition-colors w-fit md:w-auto"
+              >
+                {/* أيقونة المشاركة */}
+                <Share2 size={16} strokeWidth={2} />
+                <span className="font-medium text-sm">Share</span>
+              </button>
             </div>
           </div>
 
@@ -250,7 +294,10 @@ export default function ProductDetails() {
 
           {data?.category !== "Blouses" && (
             <div className="mt-5">
-              <h4 className="mb-3"> {data?.category === "Abaya" ?"length":"Skirt Length:"} </h4>
+              <h4 className="mb-3">
+                {" "}
+                {data?.category === "Abaya" ? "length" : "Skirt Length:"}{" "}
+              </h4>
               <div className="flex flex-wrap gap-3">
                 {data?.availableLengths?.map((length, index) => (
                   <button
@@ -337,16 +384,16 @@ export default function ProductDetails() {
                   : ""
               }`}
             >
-               <svg
-              className="Icon Icon--cart w-5 h-5 text-white hover:text-black bag transition-colors"
-              role="presentation"
-              viewBox="0 0 17 20"
-            >
-              <path
-                d="M0 20V4.995l1 .006v.015l4-.002V4c0-2.484 1.274-4 3.5-4C10.518 0 12 1.48 12 4v1.012l5-.003v.985H1V19h15V6.005h1V20H0zM11 4.49C11 2.267 10.507 1 8.5 1 6.5 1 6 2.27 6 4.49V5l5-.002V4.49z"
-                fill="#fff"
-              ></path>
-            </svg>
+              <svg
+                className="Icon Icon--cart w-5 h-5 text-white hover:text-black bag transition-colors"
+                role="presentation"
+                viewBox="0 0 17 20"
+              >
+                <path
+                  d="M0 20V4.995l1 .006v.015l4-.002V4c0-2.484 1.274-4 3.5-4C10.518 0 12 1.48 12 4v1.012l5-.003v.985H1V19h15V6.005h1V20H0zM11 4.49C11 2.267 10.507 1 8.5 1 6.5 1 6 2.27 6 4.49V5l5-.002V4.49z"
+                  fill="#fff"
+                ></path>
+              </svg>
               <h6 className="capitalize font-medium">
                 {addToCartMutation.isPending ? "Adding..." : "add to bag"}
               </h6>
