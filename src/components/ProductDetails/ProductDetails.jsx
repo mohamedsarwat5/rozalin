@@ -146,43 +146,46 @@ export default function ProductDetails() {
   return (
     <div className="padding ">
       {/* 🚀 إضافة الـ Helmet هنا ديناميكياً بناءً على بيانات المنتج */}
-      <Helmet>
-        <title>{productTitle}</title>
-        <meta name="description" content={productDesc} />
+     {productTitle && (
+  <Helmet>
+    <title>{productTitle}</title>
+    <meta name="description" content={productDesc} />
 
-        {/* Open Graph / Facebook (لمشاركة الروابط بشكل مميز) */}
-        <meta property="og:type" content="product" />
-        <meta property="og:title" content={productTitle} />
-        <meta property="og:description" content={productDesc} />
-        <meta property="og:image" content={productImage} />
-        <meta property="og:url" content={productUrl} />
+    {/* Open Graph */}
+    <meta property="og:type" content="product" />
+    <meta property="og:title" content={productTitle} />
+    <meta property="og:description" content={productDesc} />
+    <meta property="og:image" content={productImage} />
+    <meta property="og:url" content={productUrl} />
 
-        {/* Twitter Card */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={productTitle} />
-        <meta name="twitter:description" content={productDesc} />
-        <meta name="twitter:image" content={productImage} />
-        {/* JSON-LD Schema (بيانات المنتج لجوجل) */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org/",
-            "@type": "Product",
-            name: productTitle,
-            image: productImage,
-            description: productDesc,
-            offers: {
-              "@type": "Offer",
-              url: productUrl,
-              priceCurrency: "EGP", // أو العملة اللي بتستخدمها
-              price: productPrice, // ابعت متغير السعر هنا (مثلاً: 1200)
-              itemCondition: "https://schema.org/NewCondition",
-              availability: productInStock
-                ? "https://schema.org/InStock"
-                : "https://schema.org/OutOfStock", // متغير حالة المخزن
-            },
-          })}
-        </script>
-      </Helmet>
+    {/* Twitter Card */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={productTitle} />
+    <meta name="twitter:description" content={productDesc} />
+    <meta name="twitter:image" content={productImage} />
+
+    {/* JSON-LD Schema */}
+    <script type="application/ld+json">
+      {JSON.stringify({
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        "name": productTitle,
+        "image": productImage,
+        "description": productDesc,
+        "offers": {
+          "@type": "Offer",
+          "url": productUrl,
+          "priceCurrency": "EGP",
+          "price": productPrice,
+          "itemCondition": "https://schema.org/NewCondition",
+          "availability": productInStock
+            ? "https://schema.org/InStock"
+            : "https://schema.org/OutOfStock",
+        },
+      })}
+    </script>
+  </Helmet>
+)}
 
       <div className="grid md:grid-cols-2 grid-cols-1 gap-y-6 pb-12">
         <div className="w-full md:w-8/12 overflow-hidden mx-auto relative ">
