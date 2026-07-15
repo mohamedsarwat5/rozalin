@@ -162,6 +162,26 @@ export default function ProductDetails() {
         <meta name="twitter:title" content={productTitle} />
         <meta name="twitter:description" content={productDesc} />
         <meta name="twitter:image" content={productImage} />
+        {/* JSON-LD Schema (بيانات المنتج لجوجل) */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org/",
+            "@type": "Product",
+            name: productTitle,
+            image: productImage,
+            description: productDesc,
+            offers: {
+              "@type": "Offer",
+              url: productUrl,
+              priceCurrency: "EGP", // أو العملة اللي بتستخدمها
+              price: productPrice, // ابعت متغير السعر هنا (مثلاً: 1200)
+              itemCondition: "https://schema.org/NewCondition",
+              availability: productInStock
+                ? "https://schema.org/InStock"
+                : "https://schema.org/OutOfStock", // متغير حالة المخزن
+            },
+          })}
+        </script>
       </Helmet>
 
       <div className="grid md:grid-cols-2 grid-cols-1 gap-y-6 pb-12">
