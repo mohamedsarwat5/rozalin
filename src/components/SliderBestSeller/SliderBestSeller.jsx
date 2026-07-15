@@ -45,11 +45,7 @@ export default function SliderBestSeller() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center py-10">
-        <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
-      </div>
-    );
+    return <Loading />;
   }
 
   if (isError) {
@@ -61,7 +57,7 @@ export default function SliderBestSeller() {
   }
 
   return (
-    <div className="w-full py-8">
+    <div className="w-full py-8 overflow-hidden">
       <div className="slider-container padding">
         <h3 className="text-center mb-1 capitalize md:text-xl text-sm">
           Best Sellers
