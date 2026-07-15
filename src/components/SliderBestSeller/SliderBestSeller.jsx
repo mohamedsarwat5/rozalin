@@ -17,6 +17,7 @@ export default function SliderBestSeller() {
     speed: 300,
     slidesToShow: 4, // عرض 4 منتجات في الشاشات الكبيرة كما في الصورة
     slidesToScroll: 1,
+    autoplay: true,
 
     responsive: [
       {
@@ -65,7 +66,9 @@ export default function SliderBestSeller() {
         <h3 className="text-center mb-1 capitalize md:text-xl text-sm">
           Best Sellers
         </h3>
-        <h3 className="capitalize mb-4 text-center text-burgundy font-medium italic">Discover the elegance</h3>
+        <h3 className="capitalize mb-4 text-center text-burgundy font-medium italic">
+          Discover the elegance
+        </h3>
         <Slider {...settings}>
           {bestSellers?.map((product, i) => (
             // إضافة padding أفقي خفيف (px-2) لعمل مسافات نظيفة بين الصور دون الحاجة لـ borders
@@ -124,7 +127,10 @@ export default function SliderBestSeller() {
             </div>
           ))}
         </Slider>
-        <NavLink to={`/bestseller`} className={`uppercase btn1 block text-center mt-12 bg-burgundy text-white text-xs px-7 py-2 w-fit mx-auto`}>
+        <NavLink
+          to={`/bestseller`}
+          className={`uppercase btn1 block text-center mt-12 bg-burgundy text-white text-xs px-7 py-2 w-fit mx-auto`}
+        >
           view all products
         </NavLink>
       </div>
