@@ -55,6 +55,8 @@ export default function Home() {
 
       <SliderBestSeller />
 
+       <h3 className="capitalize mb- text-center text-burgundy font-medium italic">shop true luxury</h3>
+
       <div className="padding grid md:grid-cols-2 grid-cols-1 gap-3">
         {Images.map((e, i) => (
           <div key={i} className="aspect-3/4 overflow-hidden relative">

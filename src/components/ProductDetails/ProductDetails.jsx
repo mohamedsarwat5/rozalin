@@ -146,10 +146,6 @@ export default function ProductDetails() {
               {data?.price}{" "}
               <span className="text-gray-500 text-lg font-normal">LE</span>
             </h3>
-            {/* <span>|</span>
-            <h3 className="line-through text-gray-500">
-              750 <span className="line-none">EGP</span>
-            </h3> */}
           </div>
 
           {/* colors */}
