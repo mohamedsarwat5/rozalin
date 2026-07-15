@@ -121,7 +121,7 @@ export default function ProductDetails() {
     // بيانات المشاركة
     const shareData = {
       title: data?.name ? `${data.name} | Rozalin` : "Rozalin Store",
-      text: `شاهدي هذا الفستان الأنيق من متجر روزالين: ${data?.name}`,
+      text: `Watch this from Rozalin Store: ${data?.name}`,
       url: currentUrl,
     };
 
