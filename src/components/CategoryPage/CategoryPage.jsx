@@ -31,8 +31,9 @@ export default function CategoryPage() {
   if (isLoading) return <Loading />;
 
   return (
-    <div className="min-h-dvh">
+    <div className="min-h-dvh ">
       <div className=" flex items-center justify-center flex-col ">
+
         <div className="flex items-center justify-center space-x-2">
           <i className="fa-solid fa-heart text-burgundy"></i>
           <h2 className="capitalize font-semibold text-xl">{categoryName}</h2>
@@ -85,6 +86,13 @@ export default function CategoryPage() {
             </NavLink>
           </motion.div>
         ))}
+      </div>
+      <div className="">
+        {products?.length === 0 && (
+          <div className="text-center">
+            <h3 className="capitalize font-semibold text-xl">coming soon....</h3>
+          </div>
+        )}
       </div>
     </div>
   );
