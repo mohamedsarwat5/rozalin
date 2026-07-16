@@ -31,7 +31,7 @@ export default function CategoryPage() {
   if (isLoading) return <Loading />;
 
   return (
-    <div>
+    <div className="min-h-dvh">
       <div className=" flex items-center justify-center flex-col ">
         <div className="flex items-center justify-center space-x-2">
           <i className="fa-solid fa-heart text-burgundy"></i>
