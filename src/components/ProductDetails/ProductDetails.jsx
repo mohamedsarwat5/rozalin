@@ -274,6 +274,9 @@ export default function ProductDetails() {
               <h4
                 key={index}
                 onClick={() => {
+                  // 👈 الشرط المنقذ: لو ضغط على نفس اللون المختار حالياً، اخرج فوراً ومتعملش حاجة
+                  if (selectedColorIndex === index) return;
+
                   // 1. احفظ الصورة الحالية قبل ما نغير اللون
                   const currentImg = data?.colors?.[selectedColorIndex]?.image;
                   setPrevImage(currentImg);
