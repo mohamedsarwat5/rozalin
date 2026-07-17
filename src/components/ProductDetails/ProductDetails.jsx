@@ -11,6 +11,7 @@ import { Helmet } from "react-helmet-async"; // مستوردة بالفعل وم
 export default function ProductDetails() {
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [isImageLoading, setIsImageLoading] = useState(true);
+  const [prevImage, setPrevImage] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedLength, setSelectedLength] = useState("");
   const [quantity, setQuantity] = useState(1);
@@ -192,27 +193,38 @@ export default function ProductDetails() {
 
       <div className="grid md:grid-cols-2 grid-cols-1 gap-y-6 pb-12">
         <div className="w-full md:w-8/12 overflow-hidden mx-auto relative aspect-2/3 bg-gray-100 rounded-md">
-          {/* تم ربط كلمة Sold out بحالة اللون الحالي */}
           {!isCurrentColorInStock && (
             <span className="absolute bg-red-500 z-50 top-7 -right-8 px-2 py-0.5 w-36 text-center rotate-45 text-white text-sm">
               Sold out
             </span>
           )}
 
-          {/* 1. الـ Skeleton Loader (بيظهر فقط لما الصورة تكون بتحمل) */}
+          {/* ١. الصورة القديمة: بتفضل ظهرت في الخلفية طالما الصورة الجديدة لسه بتحمل */}
+          {isImageLoading && prevImage && (
+            <img
+              src={prevImage}
+              alt="previous color"
+              className="absolute inset-0 object-cover w-full h-full" // عملنا  خفيف عشان اليوزر يعرف إنها بتتغير
+            />
+          )}
+
+          {/* ٢. طبقة الـ Loader الشفافة وفوقها الـ Spinner */}
           {isImageLoading && (
-            <div className="absolute inset-0 w-full h-full bg-neutral-200 rounded-md flex items-center justify-center">
-              {/* مؤشر دوران بورغندي ناعم */}
+            <div className="absolute inset-0 w-full h-full bg-white/40  z-10 flex items-center justify-center animate-pulse">
+              {/* مؤشر دوران نبيتي ناعم فوق الطبقة الشفافة */}
               <div className="w-8 h-8 border-4 border-neutral-300 border-t-burgundy rounded-full animate-spin"></div>
             </div>
           )}
 
-          {/* 2. الصورة الفعالة */}
+          {/* ٣. الصورة الجديدة: بتفتح بنعومة أول ما تخلص تحميل */}
           <img
             src={data?.colors?.[selectedColorIndex]?.image}
             alt={data?.name}
-            onLoad={() => setIsImageLoading(false)} // 👈 أول ما تحمل بالكامل، بنقفل الـ loader
-            className={`object-cover w-full h-full transition-opacity duration-300 ${
+            onLoad={() => {
+              setIsImageLoading(false);
+              setPrevImage(""); // بنصفر الصورة القديمة بعد النجاح
+            }}
+            className={`object-cover w-full h-full relative z-0 transition-opacity duration-500 ${
               isImageLoading ? "opacity-0" : "opacity-100"
             }`}
           />
@@ -262,8 +274,13 @@ export default function ProductDetails() {
               <h4
                 key={index}
                 onClick={() => {
+                  // 1. احفظ الصورة الحالية قبل ما نغير اللون
+                  const currentImg = data?.colors?.[selectedColorIndex]?.image;
+                  setPrevImage(currentImg);
+
+                  // 2. غير اللون وشغل الـ loader
                   setSelectedColorIndex(index);
-                  setIsImageLoading(true); // 👈 شغل الـ loader أول ما يضغط على لون جديد
+                  setIsImageLoading(true);
                   scrollToTop();
                 }}
                 className={`capitalize py-1 px-4 text-sm rounded-md font-normal border cursor-pointer transition-all ${
