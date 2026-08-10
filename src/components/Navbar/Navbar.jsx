@@ -12,7 +12,7 @@ import {
   X,
 } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { Store } from "../../context/StoreProvider";
 import { toast } from "sonner";
 
@@ -21,8 +21,18 @@ export default function Navbar() {
 
   const [isCollectionsOpen, setIsCollectionsOpen] = useState(false);
 
+  const { pathname } = useLocation();
+
   // مصفوفة تحتوي على العناصر الفرعية لـ All collections
-  const subCollections = ["Sets", "Blouses", "Skirts", "Abaya","Soirée","Dresses"];
+  const subCollections = [
+    "Sets",
+    "Dresses",
+    "Blouses",
+    "Skirts",
+    "Abaya",
+    "Soirée",
+    "Cardigan",
+  ];
 
   const queryClient = useQueryClient();
 
@@ -164,35 +174,39 @@ export default function Navbar() {
             {/* All collections (Accordion) */}
             <div className="border-b border-slate-300 pb-4">
               <button
-                onClick={() => setIsCollectionsOpen(!isCollectionsOpen)}
+                // onClick={() => setIsCollectionsOpen(!isCollectionsOpen)}
                 className="w-full flex items-center justify-between text-left cursor-pointer focus:outline-none"
               >
                 <span>All collections</span>
-                {isCollectionsOpen ? (
+                {/* {isCollectionsOpen ? (
                   <Minus size={16} className="text-gray-500" />
                 ) : (
                   <Plus size={16} className="text-gray-500" />
-                )}
+                )} */}
               </button>
 
               {/* العناصر الفرعية لـ All collections */}
               <div
-                className={`pl-4 space-y-4 pt-4 text-gray-600 text-[14px] transition-all duration-300 ease-in-out  ${
-                  isCollectionsOpen
-                    ? "max-h-125 opacity-100 "
-                    : "max-h-0 opacity-0 "
-                }`}
+                className={`pl-4 space-y-4 pt-4 text-gray-800 md:text-[14px] text-[16px] transition-all duration-300 ease-in-out  max-h-125 opacity-100`}
               >
-                {subCollections.map((item, index) => (
-                  <NavLink
-                    onClick={() => setOpenMenu(false)}
-                    to={`category/${item}`}
-                    key={index}
-                    className="block hover:text-burgundy transition-colors"
-                  >
-                    {item}
-                  </NavLink>
-                ))}
+                {subCollections.map((item, index) => {
+                  const targetPath = `/category/${item}`;
+                  const isActive = pathname === targetPath;
+
+                  return (
+                    <NavLink
+                      onClick={() => setOpenMenu(false)}
+                      to={targetPath}
+                      key={index}
+                      className="hover:text-burgundy transition-colors font-medium flex items-center gap-x-1"
+                    >
+                      {isActive && (
+                        <i className="fa-solid fa-heart text-burgundy"></i>
+                      )}
+                      {item}
+                    </NavLink>
+                  );
+                })}
               </div>
             </div>
           </nav>

@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import Loading from "../Loading/Loading";
 import SliderBestSeller from "../SliderBestSeller/SliderBestSeller";
+import DressesSlider from "../DressesSlider/DressesSlider";
 // import blouse from "../../../public/blouse.jpg";
 // import skirt from "../../../public/skirt.webp";
 // import set from "../../../public/set.webp";
@@ -54,6 +55,8 @@ export default function Home() {
       </div>
 
       <SliderBestSeller />
+
+      <DressesSlider/>
 
        <h3 className="capitalize mb- text-center text-burgundy font-medium italic">shop true luxury</h3>
 
