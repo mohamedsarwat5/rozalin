@@ -18,6 +18,9 @@ export default function Home() {
     { name: "abaya", src: "/abaya.webp" },
     { name: "blouses", src: "/blouse.jpg" },
     { name: "skirts", src: "/skirt.webp" },
+    { name: "dresses", src: "/dress.jpg" },
+    { name: "Cardigan", src: "/cardigan.jpeg" },
+    { name: "Soirée", src: "/soaree.jpeg" },
   ];
 
   useEffect(() => {
@@ -56,9 +59,11 @@ export default function Home() {
 
       <SliderBestSeller />
 
-      <DressesSlider/>
+      <DressesSlider />
 
-       <h3 className="capitalize mb- text-center text-burgundy font-medium italic">shop true luxury</h3>
+      <h3 className="capitalize mb- text-center text-burgundy font-medium italic">
+        shop true luxury
+      </h3>
 
       <div className="padding grid md:grid-cols-2 grid-cols-1 gap-3">
         {Images.map((e, i) => (
