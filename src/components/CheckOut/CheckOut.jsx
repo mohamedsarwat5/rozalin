@@ -7,34 +7,34 @@ import { toast } from "sonner";
 
 // 👈 كائن المحافظات وأسعار الشحن الخاصة بها خارج الكومبوننت لعدم إعادة إنشائه مع كل رندر
 const GOVERNORATES = {
-  "Cairo": 70,
-  "Giza": 70,
+  Cairo: 70,
+  Giza: 70,
   "New Cities": 80,
-  "Alexandria": 90,
-  "Qalyubia": 80,
-  "Sharqia": 90,
-  "Dakahlia": 90,
-  "Beheira": 90,
+  Alexandria: 90,
+  Qalyubia: 80,
+  Sharqia: 90,
+  Dakahlia: 90,
+  Beheira: 90,
   "Kafr El Sheikh": 90,
-  "Gharbia": 90,
-  "Monufia": 90,
-  "Damietta": 90,
+  Gharbia: 90,
+  Monufia: 90,
+  Damietta: 90,
   "Port Said": 90,
-  "Ismailia": 90,
-  "Suez": 90,
+  Ismailia: 90,
+  Suez: 90,
   "North Sinai": 130,
   "South Sinai": 130,
-  "Matrouh": 130,
+  Matrouh: 130,
   "Red Sea": 130,
   "New Valley": 130,
-  "Fayoum": 100,
+  Fayoum: 100,
   "Beni Suef": 100,
-  "Minya": 100,
-  "Assiut": 100,
-  "Sohag": 100,
-  "Qena": 100,
-  "Luxor": 100,
-  "Aswan": 100
+  Minya: 100,
+  Assiut: 100,
+  Sohag: 100,
+  Qena: 100,
+  Luxor: 100,
+  Aswan: 100,
 };
 
 export default function Checkout() {
@@ -69,7 +69,9 @@ export default function Checkout() {
   });
 
   // 👈 حساب قيمة شحن المحافظة المحددة ديناميكياً
-  const shippingPrice = formData.governorate ? GOVERNORATES[formData.governorate] : 0;
+  const shippingPrice = formData.governorate
+    ? GOVERNORATES[formData.governorate]
+    : 0;
 
   // 2. الـ Mutation الخاص بإنشاء الطلب وتصفير العربة
   const createOrderMutation = useMutation({
@@ -236,17 +238,24 @@ export default function Checkout() {
                   onChange={handleInputChange}
                   className="w-full border p-2.5 rounded-md focus:ring-1 focus:ring-burgundy focus:outline-none bg-white text-gray-800"
                 >
-                  <option value="" disabled>Choose your governorate...</option>
+                  <option value="" disabled>
+                    Choose your governorate...
+                  </option>
                   {Object.entries(GOVERNORATES).map(([gov, price]) => (
                     <option key={gov} value={gov}>
                       {gov}
                     </option>
                   ))}
                 </select>
+                {/* <div className="text-center text-red-500 mt-3 text-sm">
+                  <p dir="rtl" lang="ar">
+                    **يتم الشحن والتوصيل خلال 10 ايام**
+                  </p>
+                </div> */}
               </div>
 
               {/* الحل السحري: الزر هنا محصن داخل الفورم ومحمي من الاختفاء */}
-              <div className="pt-4 border-t mt-6">
+              <div className=" border-t ">
                 <button
                   type="submit"
                   disabled={createOrderMutation.isPending}
@@ -314,14 +323,28 @@ export default function Checkout() {
               <div className="flex justify-between text-sm text-gray-600">
                 <span>Shipping</span>
                 {/* 👈 إذا اختار العميل محافظة يظهر سعرها، وإذا لم يختر يظهر تنبيه بالاختيار */}
-                <span className={shippingPrice > 0 ? "text-gray-800 font-medium" : "text-amber-600 font-medium"}>
-                  {shippingPrice > 0 ? `${shippingPrice} EGP` : "Select Governorate"}
+                <span
+                  className={
+                    shippingPrice > 0
+                      ? "text-gray-800 font-medium"
+                      : "text-amber-600 font-medium"
+                  }
+                >
+                  {shippingPrice > 0
+                    ? `${shippingPrice} EGP`
+                    : "Select Governorate"}
                 </span>
               </div>
+
               <div className="flex justify-between text-base font-bold text-burgundy pt-2 border-t">
                 <span>Total Amount:</span>
                 {/* 👈 جمع سعر العربة الأصلي مع سعر شحن المحافظة المختارة ديناميكياً */}
-                <span>{((cartData?.totalPrice || 0) + shippingPrice)} EGP</span>
+                <span>{(cartData?.totalPrice || 0) + shippingPrice} EGP</span>
+              </div>
+              <div className="text-center text-red-500 text-sm ">
+                <p dir="rtl" lang="ar">
+                  **يتم الشحن والتوصيل خلال 10 ايام**
+                </p>
               </div>
             </div>
           </div>

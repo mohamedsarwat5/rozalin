@@ -24,13 +24,16 @@ export default function Shipping() {
                   Once your order is confirmed, we immediately prepare and
                   dispatch your package to our reliable shipping partner.
                 </p>
+
                 <p>
                   Our delivery service ensures your items arrive safely at your
                   designated address within a maximum of{" "}
-                  <strong className="text-gray-900 font-medium">
-                    10 business days
-                  </strong>
+                  <strong className="text-gray-900 font-medium">10 days</strong>
                   .
+                </p>
+                <p>
+                  For urgent requests, please contact us via page messages to
+                  arrange an appointment.
                 </p>
                 <p className="text-xs text-gray-600 italic mt-2">
                   * Please note that unforeseen regional logistics delays or
@@ -64,9 +67,13 @@ export default function Shipping() {
                   تضمن خدمة التوصيل لدينا وصول منتجاتك بأمان إلى عنوانك المحدد
                   خلال مدة أقصاها{" "}
                   <strong className="text-gray-900 font-semibold">
-                    ١٠ أيام عمل
+                    ١٠ أيام
                   </strong>
                   .
+                </p>
+                <p>
+                  للطلبات العاجلة يرجى التواصل معنا عبر رسائل الصفحة لتنسيق
+                  الموعد.
                 </p>
                 <p className="text-xs text-gray-600 italic mt-2">
                   * يرجى العلم أن التأخيرات اللوجستية غير المتوقعة أو فترات
