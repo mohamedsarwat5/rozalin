@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loading from "../Loading/Loading";
 import { toast } from "sonner";
+import SuccessModal from "../SuccessModal/SuccessModal";
 
 // 👈 كائن المحافظات وأسعار الشحن الخاصة بها خارج الكومبوننت لعدم إعادة إنشائه مع كل رندر
 const GOVERNORATES = {
@@ -38,6 +39,7 @@ const GOVERNORATES = {
 };
 
 export default function Checkout() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -83,17 +85,22 @@ export default function Checkout() {
       return data;
     },
     onSuccess: () => {
-      toast.success("Order placed successfully!");
+      setIsModalOpen(true);
+      // toast.success("Order placed successfully!");
       // تحديث كاش العربة في الـ TanStack Query لتظهر فارغة فوراً في الـ Navbar
       queryClient.invalidateQueries(["cart"]);
-      // توجيه العميل لصفحة الرئيسة أو صفحة نجاح الطلب
-      navigate("/");
     },
     onError: (error) => {
       console.error(error);
       toast.error(error.response?.data?.message || "Something went wrong.");
     },
   });
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // إغلاق المودال عند ضغط OK
+    // هنا تقدر تعمل الـ navigate بتوعك براحتك
+    navigate("/");
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -267,6 +274,7 @@ export default function Checkout() {
                 </button>
               </div>
             </form>
+            {/* <SuccessModal isOpen={isModalOpen} onClose={handleCloseModal} /> */}
           </div>
 
           {/* القسم الأيمن: ملخص المنتجات والأسعار */}
@@ -361,7 +369,9 @@ export default function Checkout() {
             Continue Shopping
           </button>
         </div>
+
       )}
+      <SuccessModal isOpen={isModalOpen} onClose={handleCloseModal} />
     </div>
   );
 }
