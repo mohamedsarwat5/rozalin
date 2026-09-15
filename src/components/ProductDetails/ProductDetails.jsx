@@ -261,10 +261,20 @@ export default function ProductDetails() {
 
           {/* price */}
           <div className="flex items-center space-x-4 mb-5">
-            <h3 className="font-bold text-burgundy text-2xl">
-              {data?.price}{" "}
-              <span className="text-gray-500 text-lg font-normal">LE</span>
-            </h3>
+            <div className="flex items-center space-x-3 text-lg">
+              <h5
+                className={`font-medium ${data?.onSale ? "line-through text-slate-500 " : "text-burgundy"}`}
+              >
+                {data?.price} LE
+              </h5>
+              {data?.onSale ? (
+                <h5 className="font-medium text-burgundy">
+                  {data?.salePrice} LE
+                </h5>
+              ) : (
+                ""
+              )}
+            </div>
           </div>
 
           {/* colors */}
