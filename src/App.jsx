@@ -14,6 +14,7 @@ import Exchange from "./components/Exchange/Exchange";
 import Privacy from "./components/Privacy/Privacy";
 import Contact from "./components/Contact/Contact";
 import Shipping from "./components/Shipping/Shipping";
+import OnSale from "./components/OnSale/OnSale";
 
 export default function App() {
   const client = new QueryClient();
@@ -27,6 +28,7 @@ export default function App() {
         { path: "details/:id", element: <ProductDetails /> },
         { path: "checkout", element: <Checkout /> },
         { path: "bestSeller", element: <BestSeller /> },
+        // { path: "onsale", element: <OnSale /> },
         { path: "newarrival", element: <NewArrivals /> },
         { path: "exchange", element: <Exchange /> },
         { path: "privacy", element: <Privacy /> },

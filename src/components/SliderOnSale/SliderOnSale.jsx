@@ -1,17 +1,13 @@
 import React from "react";
 import SliderImport from "react-slick";
-import { useBestSellers } from "../useBestSeller";
 import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
+import { useOnSale } from "../useOnSale";
 import Loading from "../Loading/Loading";
-
-// حل مشكلة استيراد react-slick في بيئة Vite
 const Slider = SliderImport.default || SliderImport;
-
-export default function SliderBestSeller() {
-  const { data: bestSellers, isLoading, isError, error } = useBestSellers();
-
+export default function SliderOnSale() {
+  const { data: onSale, isLoading, isError, error } = useOnSale();
   const settings = {
     dots: true, // إلغاء النقاط للحصول على مظهر نظيف وبسيط مثل الصورة
     infinite: true,
@@ -52,11 +48,10 @@ export default function SliderBestSeller() {
   if (isError) {
     return (
       <div className="text-red-500 text-center py-10">
-        Error loading Best Sellers: {error.message}
+        Error loading onsale: {error.message}
       </div>
     );
   }
-
   return (
     <div className="w-full py-8 overflow-hidden">
       <div className="slider-container padding">
@@ -67,7 +62,7 @@ export default function SliderBestSeller() {
           Discover the elegance
         </h3>
         <Slider {...settings}>
-          {bestSellers?.map((product, i) => (
+          {onSale?.map((product, i) => (
             // إضافة padding أفقي خفيف (px-2) لعمل مسافات نظيفة بين الصور دون الحاجة لـ borders
             <div key={i} className="px-2 outline-none">
               <motion.div
@@ -77,11 +72,6 @@ export default function SliderBestSeller() {
                 transition={{ duration: 0.35 }}
                 className="relative overflow-hidden group"
               >
-                {product.onSale && (
-                  <div className="bg-burgundy px-3 py-1 text-sm w-fit text-white absolute z-50">
-                    <h5>onsale</h5>
-                  </div>
-                )}
                 {/* شارة نفاد الكمية */}
                 {!product.inStock && (
                   <span className="absolute bg-red-500 z-50 top-5 -right-11 px-2 py-0.5 w-36 text-center rotate-45 text-white text-xs font-semibold uppercase tracking-wider">
@@ -95,7 +85,7 @@ export default function SliderBestSeller() {
                     <img
                       src={product.colors?.[0]?.image}
                       alt={product.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 "
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
 

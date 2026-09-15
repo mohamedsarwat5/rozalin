@@ -170,6 +170,16 @@ export default function Navbar() {
                 Best Seller
               </NavLink>
             </div>
+            {/* onsale */}
+            {/* <div className="border-b border-slate-300 pb-4 acitve">
+              <NavLink
+                onClick={() => setOpenMenu(false)}
+                to={"/onsale"}
+                className="hover:text-burgundy block"
+              >
+                onsale
+              </NavLink>
+            </div> */}
 
             {/* All collections (Accordion) */}
             <div className="border-b border-slate-300 pb-4">
