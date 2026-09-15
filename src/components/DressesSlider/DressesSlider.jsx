@@ -76,6 +76,11 @@ export default function DressesSlider() {
                 transition={{ duration: 0.35 }}
                 className="relative overflow-hidden group"
               >
+                {product.onSale && (
+              <div className="bg-burgundy px-3 py-1 text-sm w-fit text-white absolute z-50">
+                <h5>onsale</h5>
+              </div>
+            )}
                 {/* شارة نفاد الكمية */}
                 {!product.inStock && (
                   <span className="absolute bg-red-500 z-50 top-5 -right-11 px-2 py-0.5 w-36 text-center rotate-45 text-white text-xs font-semibold uppercase tracking-wider">

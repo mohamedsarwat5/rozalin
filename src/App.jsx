@@ -28,7 +28,7 @@ export default function App() {
         { path: "details/:id", element: <ProductDetails /> },
         { path: "checkout", element: <Checkout /> },
         { path: "bestSeller", element: <BestSeller /> },
-        // { path: "onsale", element: <OnSale /> },
+        { path: "onsale", element: <OnSale /> },
         { path: "newarrival", element: <NewArrivals /> },
         { path: "exchange", element: <Exchange /> },
         { path: "privacy", element: <Privacy /> },

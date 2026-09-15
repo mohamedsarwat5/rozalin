@@ -171,7 +171,7 @@ export default function Navbar() {
               </NavLink>
             </div>
             {/* onsale */}
-            {/* <div className="border-b border-slate-300 pb-4 acitve">
+            <div className="border-b border-slate-300 pb-4 acitve">
               <NavLink
                 onClick={() => setOpenMenu(false)}
                 to={"/onsale"}
@@ -179,7 +179,7 @@ export default function Navbar() {
               >
                 onsale
               </NavLink>
-            </div> */}
+            </div>
 
             {/* All collections (Accordion) */}
             <div className="border-b border-slate-300 pb-4">

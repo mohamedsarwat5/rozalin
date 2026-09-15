@@ -22,8 +22,8 @@ export default function OnSale() {
             transition={{ duration: 0.35 }}
             className="mb-6 relative overflow-hidden"
           >
-            {onSale && (
-              <div className="bg-burgundy px-3 py-1 text-sm w-fit text-white absolute">
+            {product.onSale && (
+              <div className="bg-burgundy px-3 py-1 text-sm w-fit text-white absolute z-50">
                 <h5>onsale</h5>
               </div>
             )}

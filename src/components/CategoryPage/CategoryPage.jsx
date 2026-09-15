@@ -51,6 +51,16 @@ export default function CategoryPage() {
             transition={{ duration: 0.35 }}
             className="mb-6 relative overflow-hidden"
           >
+            {product.onSale && (
+              <div className="bg-burgundy px-3 py-1 text-sm w-fit text-white absolute z-50">
+                <h5>onsale</h5>
+              </div>
+            )}
+            {product.onSale && (
+              <div className="bg-burgundy px-3 py-1 text-sm w-fit text-white absolute z-50">
+                <h5>onsale</h5>
+              </div>
+            )}
             {!product.inStock && (
               <span className="absolute bg-red-500 z-50 top-5 -right-11 lg:top-7 lg:-right-8 px-2 py-0.5 w-36 text-center rotate-45 text-white text-sm">
                 {" "}
