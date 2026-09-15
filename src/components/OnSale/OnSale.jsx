@@ -52,11 +52,11 @@ export default function OnSale() {
                 <div className="flex items-center ">
                   <div className="flex items-center space-x-3 text-sm">
                     <h5
-                      className={`font-medium ${onSale ? "line-through text-slate-500" : ""}`}
+                      className={`font-medium ${product.onSale ? "line-through text-slate-500" : ""}`}
                     >
                       {product.price} LE
                     </h5>
-                    {onSale ? (
+                    {product.onSale ? (
                       <h5 className="font-medium">{product.salePrice} LE</h5>
                     ) : (
                       ""

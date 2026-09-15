@@ -77,10 +77,10 @@ export default function DressesSlider() {
                 className="relative overflow-hidden group"
               >
                 {product.onSale && (
-              <div className="bg-burgundy px-3 py-1 text-sm w-fit text-white absolute z-50">
-                <h5>onsale</h5>
-              </div>
-            )}
+                  <div className="bg-burgundy px-3 py-1 text-sm w-fit text-white absolute z-50">
+                    <h5>onsale</h5>
+                  </div>
+                )}
                 {/* شارة نفاد الكمية */}
                 {!product.inStock && (
                   <span className="absolute bg-red-500 z-50 top-5 -right-11 px-2 py-0.5 w-36 text-center rotate-45 text-white text-xs font-semibold uppercase tracking-wider">
@@ -112,9 +112,20 @@ export default function DressesSlider() {
 
                     {/* السعر والتقييم على نفس السطر */}
                     <div className="flex items-center justify-between pt-1">
-                      <h5 className="font-bold text-slate-900 text-sm sm:text-base">
-                        {product.price} LE
-                      </h5>
+                      <div className="flex items-center space-x-3 text-sm">
+                        <h5
+                          className={`font-medium ${product.onSale ? "line-through text-slate-500" : ""}`}
+                        >
+                          {product.price} LE
+                        </h5>
+                        {product.onSale ? (
+                          <h5 className="font-medium">
+                            {product.salePrice} LE
+                          </h5>
+                        ) : (
+                          ""
+                        )}
+                      </div>
 
                       {/* التقييم محاذى لليمين تماماً */}
                       <div className="flex items-center gap-1 text-xs text-gray-500 font-medium">

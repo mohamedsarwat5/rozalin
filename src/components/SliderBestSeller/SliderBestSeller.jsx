@@ -118,9 +118,18 @@ export default function SliderBestSeller() {
 
                     {/* السعر والتقييم على نفس السطر */}
                     <div className="flex items-center justify-between pt-1">
-                      <h5 className="font-bold text-slate-900 text-sm sm:text-base">
-                        {product.price} LE
-                      </h5>
+                      <div className="flex items-center space-x-3 text-sm">
+                    <h5
+                      className={`font-medium ${product.onSale ? "line-through text-slate-500" : ""}`}
+                    >
+                      {product.price} LE
+                    </h5>
+                    {product.onSale ? (
+                      <h5 className="font-medium">{product.salePrice} LE</h5>
+                    ) : (
+                      ""
+                    )}
+                  </div>
 
                       {/* التقييم محاذى لليمين تماماً */}
                       <div className="flex items-center gap-1 text-xs text-gray-500 font-medium">
