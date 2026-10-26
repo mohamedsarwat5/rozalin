@@ -22,9 +22,13 @@ export default function CategoryPage() {
     queryKey: ["products"],
     queryFn: fetchProducts,
     select: (allProducts) =>
-      allProducts.filter(
-        (product) =>
-          product.category.toLowerCase() === categoryName.toLowerCase(),
+      allProducts.filter((product) =>
+        (Array.isArray(product.category)
+          ? product.category
+          : [product.category]
+        ).some(
+          (category) => category.toLowerCase() === categoryName.toLowerCase(),
+        ),
       ),
   });
 
@@ -33,7 +37,6 @@ export default function CategoryPage() {
   return (
     <div className="min-h-dvh ">
       <div className=" flex items-center justify-center flex-col ">
-
         <div className="flex items-center justify-center space-x-2">
           <i className="fa-solid fa-heart text-burgundy"></i>
           <h2 className="capitalize font-semibold text-xl">{categoryName}</h2>
@@ -109,7 +112,9 @@ export default function CategoryPage() {
       <div className="">
         {products?.length === 0 && (
           <div className="text-center">
-            <h3 className="capitalize font-semibold text-xl">coming soon....</h3>
+            <h3 className="capitalize font-semibold text-xl">
+              coming soon....
+            </h3>
           </div>
         )}
       </div>
