@@ -77,29 +77,81 @@ export default function ProductDetails() {
   });
 
   // 3. معالج الضغط على زر الإضافة
-  const handleAddToCart = () => {
-    if (data?.category !== "Blouses" && !selectedSize) {
-      toast.error("Please choose size first");
-      return;
-    }
-    if (data?.category !== "Blouses" && !selectedLength) {
-      toast.error("Please choose length first");
-      return;
-    }
+  // const handleAddToCart = () => {
+  //   if (data?.category !== "Blouses" && !selectedSize) {
+  //     toast.error("Please choose size first");
+  //     return;
+  //   }
+  //   if (data?.category !== "Blouses" && !selectedLength) {
+  //     toast.error("Please choose length first");
+  //     return;
+  //   }
 
-    const productPayload = {
-      cartId: cartId,
-      productId: data?._id || id,
-      color: data?.colors?.[selectedColorIndex]?.color,
-      image: data?.colors?.[selectedColorIndex]?.image,
-      price: data?.price,
-      quantity: quantity,
-      size: selectedSize || null,
-      length: selectedLength || null,
-    };
+  //   const productPayload = {
+  //     cartId: cartId,
+  //     productId: data?._id || id,
+  //     color: data?.colors?.[selectedColorIndex]?.color,
+  //     image: data?.colors?.[selectedColorIndex]?.image,
+  //     price: data?.price,
+  //     quantity: quantity,
+  //     size: selectedSize || null,
+  //     length: selectedLength || null,
+  //   };
 
-    addToCartMutation.mutate(productPayload);
+  //   addToCartMutation.mutate(productPayload);
+  // };
+
+  // const handleAddToCart = () => {
+  //   // البلوزة تحتاج Weight فقط، ولا تحتاج Length
+  //   if (!isBlouse && !selectedSize) {
+  //     toast.error("Please choose size first");
+  //     return;
+  //   }
+
+  //   if (!isBlouse && !selectedLength) {
+  //     toast.error("Please choose length first");
+  //     return;
+  //   }
+
+  //   const productPayload = {
+  //     cartId: cartId,
+  //     productId: data?._id || id,
+  //     color: data?.colors?.[selectedColorIndex]?.color,
+  //     image: data?.colors?.[selectedColorIndex]?.image,
+  //     price: data?.price,
+  //     quantity: quantity,
+  //     size: selectedSize || null,
+  //     length: isBlouse ? null : selectedLength || null,
+  //   };
+
+  //   addToCartMutation.mutate(productPayload);
+  // };
+const handleAddToCart = () => {
+  if (!isBlouse && !selectedSize) {
+    toast.error("Please choose size first");
+    return;
+  }
+
+  if (!isBlouse && !selectedLength) {
+    toast.error("Please choose length first");
+    return;
+  }
+
+  const productPayload = {
+    cartId,
+    productId: data?._id || id,
+    color: data?.colors?.[selectedColorIndex]?.color,
+    image: data?.colors?.[selectedColorIndex]?.image,
+    price: data?.price,
+    quantity,
+    size: selectedSize || null,
+    length: isBlouse ? null : selectedLength || null,
   };
+
+  addToCartMutation.mutate(productPayload);
+};
+
+
 
   if (isLoading) {
     return <Loading />;
@@ -144,6 +196,16 @@ export default function ProductDetails() {
       }
     }
   };
+
+  const categories = Array.isArray(data?.category)
+    ? data.category
+    : data?.category
+      ? [data.category]
+      : [];
+
+  const isBlouse = categories.some(
+    (category) => category?.toLowerCase() === "blouses",
+  );
 
   return (
     <div className="padding ">
@@ -308,7 +370,7 @@ export default function ProductDetails() {
           </div>
 
           {/* Sizes */}
-          <div className="mt-5">
+          {/* <div className="mt-5">
             <h4 className="mb-3">Sizes:</h4>
 
             {data?.category === "Blouses" ? (
@@ -358,9 +420,79 @@ export default function ProductDetails() {
                 </div>
               </>
             )}
+          </div> */}
+          <div className="mt-5">
+            <h4 className="mb-3">{isBlouse ? "Weight:" : "Sizes:"}</h4>
+
+            {isBlouse ? (
+              <div className="flex flex-wrap gap-2">
+                {data?.availableWeights?.map((weight, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => setSelectedSize(weight)}
+                    className={`border px-3 py-2 rounded ${
+                      selectedSize === weight
+                        ? "bg-burgundy text-white border-burgundy"
+                        : "text-burgundy border-burgundy bg-transparent"
+                    }`}
+                  >
+                    {weight}
+                  </button>
+                ))}
+              </div>
+            ) : data?.category?.includes?.("Sets") ||
+              data?.category?.includes?.("sets") ? (
+              <>
+                <h4 className="mb-3">Blouse size:</h4>
+
+                <button
+                  type="button"
+                  className="border px-3 py-2 rounded bg-burgundy text-white"
+                >
+                  One size
+                </button>
+
+                <h4 className="mt-3 mb-3">Skirt size:</h4>
+
+                <div className="flex flex-wrap gap-2">
+                  {data?.availableWeights?.map((size, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => setSelectedSize(size)}
+                      className={`border px-3 py-2 rounded ${
+                        selectedSize === size
+                          ? "bg-burgundy text-white border-burgundy"
+                          : "text-burgundy border-burgundy bg-transparent"
+                      }`}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {data?.availableWeights?.map((size, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => setSelectedSize(size)}
+                    className={`border px-3 py-2 rounded ${
+                      selectedSize === size
+                        ? "bg-burgundy text-white border-burgundy"
+                        : "text-burgundy border-burgundy bg-transparent"
+                    }`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
-          {data?.category !== "Blouses" && (
+          {!isBlouse && (
             <div className="mt-5">
               <h4 className="mb-3">
                 {" "}
