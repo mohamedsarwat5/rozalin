@@ -431,11 +431,12 @@ const handleAddToCart = () => {
                     key={index}
                     type="button"
                     onClick={() => setSelectedSize(weight)}
-                    className={`border px-3 py-2 rounded ${
-                      selectedSize === weight
-                        ? "bg-burgundy text-white border-burgundy"
-                        : "text-burgundy border-burgundy bg-transparent"
-                    }`}
+                    className={`border px-3 py-2 rounded bg-burgundy text-white border-burgundy`}
+                    // ${
+                    //   selectedSize === weight
+                    //     ? "bg-burgundy text-white border-burgundy"
+                    //     : "text-burgundy border-burgundy bg-transparent"
+                    // }
                   >
                     {weight}
                   </button>
