@@ -4,6 +4,7 @@ import { useDresses } from "../useDresses";
 import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
+import Loading from "../Loading/Loading";
 
 // حل مشكلة استيراد react-slick في بيئة Vite
 const Slider = SliderImport.default || SliderImport;

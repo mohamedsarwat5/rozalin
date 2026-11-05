@@ -126,32 +126,30 @@ export default function ProductDetails() {
 
   //   addToCartMutation.mutate(productPayload);
   // };
-const handleAddToCart = () => {
-  if (!isBlouse && !selectedSize) {
-    toast.error("Please choose size first");
-    return;
-  }
+  const handleAddToCart = () => {
+    if (!isBlouse && !selectedSize) {
+      toast.error("Please choose size first");
+      return;
+    }
 
-  if (!isBlouse && !selectedLength) {
-    toast.error("Please choose length first");
-    return;
-  }
+    if (!isBlouse && !selectedLength) {
+      toast.error("Please choose length first");
+      return;
+    }
 
-  const productPayload = {
-    cartId,
-    productId: data?._id || id,
-    color: data?.colors?.[selectedColorIndex]?.color,
-    image: data?.colors?.[selectedColorIndex]?.image,
-    price: data?.price,
-    quantity,
-    size: selectedSize || null,
-    length: isBlouse ? null : selectedLength || null,
+    const productPayload = {
+      cartId,
+      productId: data?._id || id,
+      color: data?.colors?.[selectedColorIndex]?.color,
+      image: data?.colors?.[selectedColorIndex]?.image,
+      price: data?.price,
+      quantity,
+      size: selectedSize || null,
+      length: isBlouse ? null : selectedLength || null,
+    };
+
+    addToCartMutation.mutate(productPayload);
   };
-
-  addToCartMutation.mutate(productPayload);
-};
-
-
 
   if (isLoading) {
     return <Loading />;
@@ -432,11 +430,6 @@ const handleAddToCart = () => {
                     type="button"
                     onClick={() => setSelectedSize(weight)}
                     className={`border px-3 py-2 rounded bg-burgundy text-white border-burgundy`}
-                    // ${
-                    //   selectedSize === weight
-                    //     ? "bg-burgundy text-white border-burgundy"
-                    //     : "text-burgundy border-burgundy bg-transparent"
-                    // }
                   >
                     {weight}
                   </button>
@@ -495,10 +488,17 @@ const handleAddToCart = () => {
 
           {!isBlouse && (
             <div className="mt-5">
-              <h4 className="mb-3">
+              {/* <h4 className="mb-3">
                 {" "}
                 {data?.category === "Abaya" ? "length" : "Skirt Length:"}{" "}
-              </h4>
+              </h4> */}
+              <h4 className="mb-3">
+  {categories.some((category) =>
+    ["abaya", "dresses"].includes(category?.toLowerCase())
+  )
+    ? "Length"
+    : "Skirt Length"}
+</h4>
               <div className="flex flex-wrap gap-3">
                 {data?.availableLengths?.map((length, index) => (
                   <button

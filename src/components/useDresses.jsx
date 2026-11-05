@@ -14,6 +14,6 @@ export const useDresses = () => {
     queryKey: ["products"],
     queryFn: fetchProducts,
     select: (products) =>
-      products.filter((product) => product.category === "Dresses"),
+      products.filter((product) => (Array.isArray(product.category)?product.category:[product.category]).includes("Dresses")),
   });
 };
