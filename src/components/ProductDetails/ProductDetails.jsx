@@ -125,31 +125,65 @@ export default function ProductDetails() {
   //   };
 
   //   addToCartMutation.mutate(productPayload);
+  // };\\\
+
+
+
+  // const handleAddToCart = () => {
+  //   if (!isBlouse && !selectedSize) {
+  //     toast.error("Please choose size first");
+  //     return;
+  //   }
+
+  //   if (!isBlouse && !selectedLength) {
+  //     toast.error("Please choose length first");
+  //     return;
+  //   }
+
+  //   const productPayload = {
+  //     cartId,
+  //     productId: data?._id || id,
+  //     color: data?.colors?.[selectedColorIndex]?.color,
+  //     image: data?.colors?.[selectedColorIndex]?.image,
+  //     price: data?.price,
+  //     quantity,
+  //     size: selectedSize || null,
+  //     length: isBlouse ? null : selectedLength || null,
+  //   };
+
+  //   addToCartMutation.mutate(productPayload);
   // };
-  const handleAddToCart = () => {
-    if (!isBlouse && !selectedSize) {
-      toast.error("Please choose size first");
-      return;
-    }
 
-    if (!isBlouse && !selectedLength) {
-      toast.error("Please choose length first");
-      return;
-    }
 
-    const productPayload = {
-      cartId,
-      productId: data?._id || id,
-      color: data?.colors?.[selectedColorIndex]?.color,
-      image: data?.colors?.[selectedColorIndex]?.image,
-      price: data?.price,
-      quantity,
-      size: selectedSize || null,
-      length: isBlouse ? null : selectedLength || null,
-    };
 
-    addToCartMutation.mutate(productPayload);
+
+const handleAddToCart = () => {
+  // كل المنتجات بما فيها البلوزات لازم تختار مقاس
+  if (!selectedSize) {
+    toast.error("Please choose size first");
+    return;
+  }
+
+  // الأطوال مطلوبة لكل المنتجات ما عدا البلوزات
+  if (!isBlouse && !selectedLength) {
+    toast.error("Please choose length first");
+    return;
+  }
+
+  const productPayload = {
+    cartId,
+    productId: data?._id || id,
+    color: data?.colors?.[selectedColorIndex]?.color,
+    image: data?.colors?.[selectedColorIndex]?.image,
+    price: data?.price,
+    quantity,
+    size: selectedSize,
+    length: isBlouse ? null : selectedLength,
   };
+
+  addToCartMutation.mutate(productPayload);
+};
+
 
   if (isLoading) {
     return <Loading />;
@@ -367,58 +401,6 @@ export default function ProductDetails() {
             ))}
           </div>
 
-          {/* Sizes */}
-          {/* <div className="mt-5">
-            <h4 className="mb-3">Sizes:</h4>
-
-            {data?.category === "Blouses" ? (
-              <button className="bg-burgundy text-white border-burgundy py-1 px-4 rounded-md border w-fit">
-                {data?.availableWeights}
-              </button>
-            ) : data?.category === "Sets" || data?.category === "sets" ? (
-              <>
-                <h4 className="mb-3">Blouse size : </h4>
-                <button className="bg-burgundy text-white border-burgundy py-1 px-4 rounded-md border w-fit">
-                  one size
-                </button>
-
-                <h4 className="mt-3">Skirt size:</h4>
-                <div className="flex flex-wrap gap-3 mt-3">
-                  {data?.availableWeights?.slice(0).map((size, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setSelectedSize(size)}
-                      className={` py-1 px-4 rounded-md border transition-all cursor-pointer ${
-                        selectedSize === size
-                          ? "bg-burgundy text-white border-burgundy"
-                          : "text-burgundy border-burgundy bg-transparent"
-                      }`}
-                    >
-                      {size}
-                    </button>
-                  ))}
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="flex flex-wrap gap-3 mt-3">
-                  {data?.availableWeights?.map((size, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setSelectedSize(size)}
-                      className={` py-1 px-4 rounded-md border transition-all cursor-pointer ${
-                        selectedSize === size
-                          ? "bg-burgundy text-white border-burgundy"
-                          : "text-burgundy border-burgundy bg-transparent"
-                      }`}
-                    >
-                      {size}
-                    </button>
-                  ))}
-                </div>
-              </>
-            )}
-          </div> */}
           <div className="mt-5">
             <h4 className="mb-3">{isBlouse ? "Weight:" : "Sizes:"}</h4>
 
@@ -429,7 +411,11 @@ export default function ProductDetails() {
                     key={index}
                     type="button"
                     onClick={() => setSelectedSize(weight)}
-                    className={`border px-3 py-2 rounded bg-burgundy text-white border-burgundy`}
+                    className={`border px-3 py-2 rounded ${
+                      selectedSize === weight
+                        ? "bg-burgundy text-white border-burgundy"
+                        : "text-burgundy border-burgundy bg-transparent"
+                    }`}
                   >
                     {weight}
                   </button>
@@ -493,12 +479,12 @@ export default function ProductDetails() {
                 {data?.category === "Abaya" ? "length" : "Skirt Length:"}{" "}
               </h4> */}
               <h4 className="mb-3">
-  {categories.some((category) =>
-    ["abaya", "dresses"].includes(category?.toLowerCase())
-  )
-    ? "Length"
-    : "Skirt Length"}
-</h4>
+                {categories.some((category) =>
+                  ["abaya", "dresses"].includes(category?.toLowerCase()),
+                )
+                  ? "Length"
+                  : "Skirt Length"}
+              </h4>
               <div className="flex flex-wrap gap-3">
                 {data?.availableLengths?.map((length, index) => (
                   <button
