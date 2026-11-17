@@ -9,7 +9,7 @@ import SuccessModal from "../SuccessModal/SuccessModal";
 // 👈 كائن المحافظات وأسعار الشحن الخاصة بها خارج الكومبوننت لعدم إعادة إنشائه مع كل رندر
 const GOVERNORATES = {
   Cairo: 80,
-  Giza: 70,
+  Giza: 80,
   "New Cities": 80,
   Alexandria: 90,
   Qalyubia: 80,
